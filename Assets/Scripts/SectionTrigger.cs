@@ -8,7 +8,7 @@ using UnityEngine;
 public class SectionTrigger : MonoBehaviour
 {
 	public GameObject backgroundImage = null;
-	Block block = null;
+	public GameObject block = null;
 
 	private void OnTriggerEnter(Collider other)
 	{
@@ -20,30 +20,17 @@ public class SectionTrigger : MonoBehaviour
 		if (other.gameObject.CompareTag("NewBlock") && this.CompareTag("Player"))
 		{
 			// TODO: create randomizer for number of lines and set them in GameController
-			/*GameObject newBlock = GameObject.Instantiate(GameController.instance.blockPrefab,
-															GameController.instance.canvas.gameObject.transform);*/
-			block = GameController.instance.blockPrefab.GetComponent<Block>();
-			if (block)
+			
+			Block newBlock = block.GetComponent<Block>();
+			if (newBlock)
 			{
-				int lines = block.GenerateBlock();
-				/*bool topLift = lines > GameController.instance.linesInGame;
-				bool sameLines = lines == GameController.instance.linesInGame;*/
+				int lines = newBlock.GenerateBlock();
+				
 				GameController.instance.linesInGame = lines;
 				
 				// create new ground block inside Canvas
-				Instantiate(block, new Vector3(1920, 0, 0), Quaternion.identity,
+				Instantiate(newBlock, new Vector3(1920, 0, 0), Quaternion.identity,
 					GameObject.FindAnyObjectByType<Canvas>().transform);
-
-				/*if (topLift)
-				{
-					GameObject.FindGameObjectsWithTag("TopBlock").Last().transform.position += new Vector3(0, 100, 0);
-					GameObject.FindGameObjectsWithTag("MidBlock").Last().transform.position += new Vector3(0, 100, 0);
-				}
-				else if (!sameLines)
-				{
-					GameObject.FindGameObjectsWithTag("TopBlock").Last().transform.position += new Vector3(0, -100, 0);
-					GameObject.FindGameObjectsWithTag("MidBlock").Last().transform.position += new Vector3(0, -100, 0);
-				}*/
 
 				MoveBlocks(lines);
 
@@ -61,6 +48,7 @@ public class SectionTrigger : MonoBehaviour
 				Debug.Log("- block!");
 				Debug.Log(this.name);
 				Destroy(block);
+
 			}
 			else if (this.CompareTag("Midground"))
 			{

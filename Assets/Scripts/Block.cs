@@ -36,19 +36,14 @@ public class Block : MonoBehaviour
 			lines = 1;
 		else if (lines > 5)
 			lines = 5;
-		// GameController.instance.linesInGame = lines;
 
-		if (lines == 1)
+		/*if (lines == 1)
 		{
 			groundLines[4] = topSoil;
-			/*GameObject.FindGameObjectsWithTag("TopBlock").Last().transform.position += new Vector3(0, -100, 0);
-			//GameObject.FindGameObjectWithTag("TopBlock").transform.position += new Vector3(0, -100, 0);
-			GameObject.FindGameObjectWithTag("MidBlock").transform.position += new Vector3(0, -100, 0);*/
 			groundLines[4].gameObject.SetActive(true);
 			for (int i = 3; i >= 0; i--)
 			{
 				groundLines[i].gameObject.SetActive(false);
-				//groundLines[i] = null;
 			}	
 				
 		}	
@@ -57,24 +52,11 @@ public class Block : MonoBehaviour
 			groundLines[4] = bottomSoil;
 			groundLines[3] = topSoil;
 			groundLines[4].gameObject.SetActive(true);
-			/*if (topLift)
-			{
-				GameObject.FindGameObjectsWithTag("TopBlock").Last().transform.position += new Vector3(0, 100, 0);
-				//GameObject.FindGameObjectWithTag("TopBlock").transform.position += new Vector3(0, 100, 0);
-				GameObject.FindGameObjectWithTag("MidBlock").transform.position += new Vector3(0, 100, 0);
-			}
-			else if (!sameLines)
-			{
-				//GameObject.FindGameObjectWithTag("TopBlock").transform.position += new Vector3(0, -100, 0);
-				GameObject.FindGameObjectsWithTag("TopBlock").Last().transform.position += new Vector3(0, -100, 0);
-				GameObject.FindGameObjectWithTag("MidBlock").transform.position += new Vector3(0, -100, 0);
-			}*/
 				
 			groundLines[3].gameObject.SetActive(true);
 			for (int i = 2; i >= 0; i--)
 			{
 				groundLines[i].gameObject.SetActive(false);
-				//groundLines[i] = null;
 			}
 		}
 		else
@@ -85,18 +67,6 @@ public class Block : MonoBehaviour
 					groundLines[i] = bottomSoil;
 				else if (i == 4 - (lines - 1))
 				{
-					/*if (topLift)
-					{
-						//GameObject.FindGameObjectWithTag("TopBlock").transform.position += new Vector3(0, 100, 0);
-						GameObject.FindGameObjectWithTag("MidBlock").transform.position += new Vector3(0, 100, 0);
-						GameObject.FindGameObjectsWithTag("TopBlock").Last().transform.position += new Vector3(0, 100, 0);
-					}
-					else if (!sameLines)
-					{
-						//GameObject.FindGameObjectWithTag("TopBlock").transform.position += new Vector3(0, -100, 0);
-						GameObject.FindGameObjectsWithTag("TopBlock").Last().transform.position += new Vector3(0, -100, 0);
-						GameObject.FindGameObjectWithTag("MidBlock").transform.position += new Vector3(0, -100, 0);
-					}*/
 					groundLines[i] = topSoil;
 				}
 				else
@@ -105,9 +75,8 @@ public class Block : MonoBehaviour
 			for (int i = 4 - lines - 1; i >= 0; i--)
 			{
 				groundLines[i].gameObject.SetActive(false);
-				//groundLines[i] = null;
 			}
-		}
+		}*/
 		return lines;
 	}
 }
