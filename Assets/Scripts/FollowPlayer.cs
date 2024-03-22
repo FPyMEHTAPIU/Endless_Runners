@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveBackground : MonoBehaviour
+public class FollowPlayer : MonoBehaviour
 {
-    public Player player = null;
+    public Transform player = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +14,6 @@ public class MoveBackground : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		transform.position += new Vector3(-player.speed / 2, 0, 0) * Time.deltaTime;
-	}
+        transform.position = new Vector3(player.transform.position.x, 540);
+    }
 }

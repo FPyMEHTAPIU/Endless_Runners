@@ -29,13 +29,13 @@ public class SectionTrigger : MonoBehaviour
 				GameController.instance.linesInGame = lines;
 				
 				// create new ground block inside Canvas
-				Instantiate(newBlock, new Vector3(1920, 0, 0), Quaternion.identity,
+				Instantiate(newBlock, new Vector3(other.transform.position.x + 960, 0, 0), Quaternion.identity,
 					GameObject.FindAnyObjectByType<Canvas>().transform);
 
 				MoveBlocks(lines);
 
 				// create new background movable image as child to background Image
-				Instantiate(backgroundImage, new Vector3(2000, 0, 0), Quaternion.identity,
+				Instantiate(backgroundImage, new Vector3(other.transform.position.x + 1000, 0, 0), Quaternion.identity,
 					GameObject.FindGameObjectWithTag("Background").transform);
 			}
 		}
