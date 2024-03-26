@@ -17,9 +17,7 @@ public class SectionTrigger : MonoBehaviour
 
 		// create new blocks
 		if (other.gameObject.CompareTag("NewBlock") && this.CompareTag("Player"))
-		{
-			// TODO: create randomizer for number of lines and set them in GameController
-			
+		{			
 			Block newBlock = block.GetComponent<Block>();
 			if (newBlock)
 			{
@@ -32,6 +30,7 @@ public class SectionTrigger : MonoBehaviour
 					GameObject.FindAnyObjectByType<Canvas>().transform);
 
 				MoveBlocks(lines);
+				newBlock.CreateObstacle();
 
 				// create new background movable image as child to background Image
 				Instantiate(backgroundImage, new Vector3(other.transform.position.x + 1000, 0, 0), Quaternion.identity,
@@ -39,7 +38,8 @@ public class SectionTrigger : MonoBehaviour
 			}
 		}
 		// Delete old blocks
-		else if (other.gameObject.CompareTag("DeleteTrigger") && (this.CompareTag("Block") || this.CompareTag("Midground")))
+		else if (other.gameObject.CompareTag("DeleteTrigger") && 
+			(this.CompareTag("Block") || this.CompareTag("Midground")))
 		{
 			Debug.Log("DELETING");
 			if (this.CompareTag("Block"))
@@ -47,7 +47,6 @@ public class SectionTrigger : MonoBehaviour
 				Debug.Log("- block!");
 				Debug.Log(this.name);
 				Destroy(block);
-
 			}
 			else if (this.CompareTag("Midground"))
 			{
@@ -58,6 +57,7 @@ public class SectionTrigger : MonoBehaviour
 		}
 	}
 
+	// Moving block depends on number of lines
 	private void MoveBlocks(int lines)
 	{
 		switch(lines)

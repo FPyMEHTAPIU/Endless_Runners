@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.XR;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
@@ -11,20 +11,22 @@ public class PlayerController : MonoBehaviour
 	private Player player;
 	public bool onGround = false;
 	public bool canJump = false;
+	public bool isJump = false;
+	public bool byWall = false;
 
-	[Range(0f, 100.0f)]
-	public float jumpForce = 25.0f;
-	public float jump = 200.0f;
-	public float fallMultiplier = 2.5f;
-	public float jumpMultiplier = 2.0f;
+	[Range(0f, 1000.0f)]
+	public float jumpForce = 250.0f;
+	public float fallMultiplier = 60f;
+	public float jumpMultiplier = 200.0f;
 
 	private Animator animator = null;
+	private int collisionCount = 0;
 
 	// Start is called before the first frame update
 	private void Awake()
 	{
 		player = GetComponent<Player>();
-		rb = GetComponent<Rigidbody>();
+		rb = player.GetComponent<Rigidbody>();
 		rb.velocity = new Vector3(player.speed / 10, Physics.gravity.y * (fallMultiplier - 1));
 		animator = player.GetComponent<Animator>();
 	}
@@ -32,14 +34,23 @@ public class PlayerController : MonoBehaviour
 	private void Update()
 	{
 		// TODO: fix speed
-		if (!onGround && rb.velocity.y < 0)
-			rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-		else
+		
+		if (onGround)
 			rb.velocity = new Vector3(player.speed / 10, 0);
+		else
+		{
+			//rb.velocity += new Vector3(0, Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
+			rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+		}
+			
+
 		if (Input.GetButtonDown("Jump") && onGround)
 		{
-			canJump = true;
+			onGround = false;
+			
+			Jump();
 		}
+		Debug.LogWarning(rb.velocity);
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -47,47 +58,64 @@ public class PlayerController : MonoBehaviour
 		Debug.Log("collider is " + collision.collider.tag);
 		if (collision.collider.CompareTag("TopBlock"))
 		{
+			collisionCount++;
 			onGround = true;
-			rb.velocity = new Vector3(player.speed / 7, 0);
+			isJump = false;
+			rb.velocity = new Vector3(player.speed / 10, 0);
+			
 			animator.CrossFade("PlayerRun", 0);
+		}
 
-			// TODO: set idle animation when player collides to wall
-			if (rb.velocity.x <= 0)
-			{
-				animator.CrossFade("Idle", 0);
-			}
-		}	
+		if (collision.collider.CompareTag("Wall") && onGround)
+		{
+			byWall = true;
+			//rb.velocity -= new Vector3(100, 0);
+		}
 	}
 
 	private void OnCollisionStay(Collision collision)
 	{
-		if (collision.collider.CompareTag("TopBlock"))
+		/*if (collision.collider.CompareTag("TopBlock"))
+		{
 			onGround = true;
+		}*/
+		canJump = false;
+		if (collision.collider.CompareTag("Wall") && onGround)
+		{
+			byWall = true;
+			//rb.velocity -= new Vector3(10, 0);
+		}
 	}
 
 	private void OnCollisionExit(Collision collision)
 	{
 		if (collision.collider.CompareTag("TopBlock"))
 		{
-			onGround = false;
+			// set onGround in exit AFTER set in enter or create different logic
+			collisionCount--;
+			if (collisionCount <= 0)
+				onGround = false;
 			canJump = false;
+		}
+		if (rb.velocity.y < 0 && !isJump && !onGround)
+		{
+			animator.CrossFade("Fall", 0);
+		}
+		if (collision.collider.CompareTag("Wall"))
+		{
+			byWall = false;
 		}
 	}
 
 	private void FixedUpdate()
 	{
-		if (canJump && onGround)
-		{
-			//rb.AddForce(new Vector3(rb.velocity.x * jumpForce, jump * jumpForce, 0), ForceMode.Impulse);
-			Jump(animator);
-			//rb.velocity = new Vector3(player.speed, jumpForce, 0);
-			onGround = false;
-			canJump = false;
-		}
+		
 	}
 
-	private void Jump(Animator animator)
+	// FIX THIS JUMP!!!
+	private void Jump()
 	{
+		isJump = true;
 		if (animator)
 		{
 			animator.CrossFade("Jump", 0);
@@ -96,7 +124,17 @@ public class PlayerController : MonoBehaviour
 		{
 			Debug.LogError("No animator found!");
 		}
-		rb.velocity = new Vector3(0, jump * jumpForce, 0);
-		rb.velocity += Vector3.up * Physics.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
-	}	
+		rb.AddForce((Vector3.up * jumpForce * jumpMultiplier), ForceMode.Impulse);
+		Debug.LogWarning(rb.velocity);
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		// TODO: Create hit and slow animation
+		if (other.gameObject.CompareTag("Damage"))
+		{
+			animator.CrossFade("Hit", 0);
+			player.health -= other.gameObject.GetComponent<Obstacle>().damage;
+		}
+	}
 }

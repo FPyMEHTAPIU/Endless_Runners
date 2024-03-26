@@ -11,6 +11,10 @@ public class Block : MonoBehaviour
 	public GameObject middleSoil = null;
 	public GameObject topSoil = null;
 	public BoxCollider creatingTrigger = null;
+	public GameObject obstacleArea = null;
+	public Obstacle obstaclePrefab = null;
+
+	public int maxObstacleCount = 3; 
 	
 	void Start()
 	{
@@ -29,54 +33,59 @@ public class Block : MonoBehaviour
 		middleSoil = GameController.instance.middleSoil;
 		topSoil = GameController.instance.topSoil;
 		int lines = Random.Range(GameController.instance.linesInGame - 1, GameController.instance.linesInGame + 2);
-		bool topLift = lines > GameController.instance.linesInGame;
-		bool sameLines = lines == GameController.instance.linesInGame;
 		
 		if (lines < 1)
 			lines = 1;
 		else if (lines > 5)
 			lines = 5;
 
-		/*if (lines == 1)
+		bool topLift = lines > GameController.instance.linesInGame;
+		bool sameLines = lines == GameController.instance.linesInGame;
+
+		//TODO: fix it
+		/*if (topLift)
+			GameObject.FindGameObjectWithTag("Wall").transform.position += new Vector3(0, 100, 0);
+		else if (!sameLines)
+			GameObject.FindGameObjectWithTag("Wall").transform.position += new Vector3(0, -100, 0);*/
+		
+		return lines;
+	}
+
+	internal void CreateObstacle()
+	{
+		// Get area
+		if (obstacleArea)
 		{
-			groundLines[4] = topSoil;
-			groundLines[4].gameObject.SetActive(true);
-			for (int i = 3; i >= 0; i--)
+			int obstacleCount = Random.Range(0, maxObstacleCount + 1);
+			// Create Obstacle GameObject
+			Obstacle obstacle = obstaclePrefab.GetComponent<Obstacle>();
+			if (obstacle)
 			{
-				groundLines[i].gameObject.SetActive(false);
-			}	
-				
-		}	
-		else if (lines > 1 && lines < 3)
-		{
-			groundLines[4] = bottomSoil;
-			groundLines[3] = topSoil;
-			groundLines[4].gameObject.SetActive(true);
-				
-			groundLines[3].gameObject.SetActive(true);
-			for (int i = 2; i >= 0; i--)
-			{
-				groundLines[i].gameObject.SetActive(false);
+				for (int i = 0; i < obstacleCount; i++)
+				{
+					// TODO: fix position
+					Instantiate(obstacle, new Vector3(obstacleArea.transform.position.x, 0, 0), Quaternion.identity,
+								GameObject.FindGameObjectsWithTag("Block").Last().transform);
+					// Choose random obstacle by switch (1 or 2) and set data
+					int obstacleType = Random.Range(0, 2);
+					switch (obstacleType)
+					{
+						case 0:
+							obstacle.type = Obstacle.obstacleType.spike;
+							obstacle.damage = 25;
+							obstacle.speedDecrement = 20;
+							break;
+						case 1:
+							obstacle.type = Obstacle.obstacleType.slime;
+							obstacle.damage = 0;
+							obstacle.speedDecrement = 40;
+							break;
+						default: break;
+					}
+					// Set sprite to Obstacle
+					obstacle.obstacleImage.sprite = obstacle.sprites[obstacleType];
+				}
 			}
 		}
-		else
-		{
-			for (int i = 4; i >= 4 - (lines - 1); i--)
-			{
-				if (i == 4)
-					groundLines[i] = bottomSoil;
-				else if (i == 4 - (lines - 1))
-				{
-					groundLines[i] = topSoil;
-				}
-				else
-					groundLines[i] = middleSoil;
-			}
-			for (int i = 4 - lines - 1; i >= 0; i--)
-			{
-				groundLines[i].gameObject.SetActive(false);
-			}
-		}*/
-		return lines;
 	}
 }

@@ -18,6 +18,7 @@ public class MoveGround : MonoBehaviour
     void Update()
     {
         // TODO: fix speed
-        rb.velocity = (new Vector3(-player.speed, 0, 0));
-    }
+        //rb.velocity = new Vector3(-player.speed, 0, 0);
+		transform.position += new Vector3(-player.speed, 0, 0) * Time.deltaTime;
+	}
 }
