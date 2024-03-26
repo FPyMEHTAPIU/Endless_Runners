@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
 	public bool canJump = false;
 	public bool isJump = false;
 	public bool byWall = false;
+	public bool timerOn = false;
 
 	[Range(0f, 1000.0f)]
 	public float jumpForce = 250.0f;
 	public float fallMultiplier = 60f;
 	public float jumpMultiplier = 200.0f;
+	private float timer = 0.0f;
 
 	private Animator animator = null;
 	private int collisionCount = 0;
@@ -27,7 +29,7 @@ public class PlayerController : MonoBehaviour
 	{
 		player = GetComponent<Player>();
 		rb = player.GetComponent<Rigidbody>();
-		rb.velocity = new Vector3(player.speed / 10, Physics.gravity.y * (fallMultiplier - 1));
+		rb.velocity = new Vector3(player.speed / 8, Physics.gravity.y * (fallMultiplier - 1));
 		animator = player.GetComponent<Animator>();
 	}
 
@@ -35,33 +37,38 @@ public class PlayerController : MonoBehaviour
 	{
 		// TODO: fix speed
 		
-		if (onGround)
-			rb.velocity = new Vector3(player.speed / 10, 0);
+		if (onGround && !timerOn)
+			rb.velocity = new Vector3(player.speed / 8, 0);
 		else
-		{
-			//rb.velocity += new Vector3(0, Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
 			rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-		}
-			
 
 		if (Input.GetButtonDown("Jump") && onGround)
 		{
 			onGround = false;
-			
 			Jump();
 		}
-		Debug.LogWarning(rb.velocity);
+
+		if (timerOn)
+		{
+			timer -= Time.deltaTime;
+			if (timer <= 0)
+			{
+				rb.velocity = Vector3.right * player.speed / 8;
+				timerOn = false;
+			}
+		}
+		Debug.Log("Timer: " + timerOn.ToString() + " and velocity: " + rb.velocity);
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		Debug.Log("collider is " + collision.collider.tag);
 		if (collision.collider.CompareTag("TopBlock"))
 		{
 			collisionCount++;
 			onGround = true;
 			isJump = false;
-			rb.velocity = new Vector3(player.speed / 10, 0);
+			if (!timerOn)
+				rb.velocity = new Vector3(player.speed / 8, 0);
 			
 			animator.CrossFade("PlayerRun", 0);
 		}
@@ -69,21 +76,16 @@ public class PlayerController : MonoBehaviour
 		if (collision.collider.CompareTag("Wall") && onGround)
 		{
 			byWall = true;
-			//rb.velocity -= new Vector3(100, 0);
+			rb.velocity = Vector3.right * player.speed / 10;
 		}
 	}
 
 	private void OnCollisionStay(Collision collision)
 	{
-		/*if (collision.collider.CompareTag("TopBlock"))
-		{
-			onGround = true;
-		}*/
 		canJump = false;
 		if (collision.collider.CompareTag("Wall") && onGround)
 		{
 			byWall = true;
-			//rb.velocity -= new Vector3(10, 0);
 		}
 	}
 
@@ -125,7 +127,6 @@ public class PlayerController : MonoBehaviour
 			Debug.LogError("No animator found!");
 		}
 		rb.AddForce((Vector3.up * jumpForce * jumpMultiplier), ForceMode.Impulse);
-		Debug.LogWarning(rb.velocity);
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -133,8 +134,21 @@ public class PlayerController : MonoBehaviour
 		// TODO: Create hit and slow animation
 		if (other.gameObject.CompareTag("Damage"))
 		{
-			animator.CrossFade("Hit", 0);
-			player.health -= other.gameObject.GetComponent<Obstacle>().damage;
+			timer = 5.0f;
+			switch(other.gameObject.GetComponent<Obstacle>().type)
+			{
+				case Obstacle.obstacleType.spike:
+					animator.CrossFade("Hit", 0);
+					player.health -= other.gameObject.GetComponent<Obstacle>().damage;
+					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
+					break;
+				case Obstacle.obstacleType.slime:
+					animator.CrossFade("Slow", 0);
+					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
+					break;
+				default: break;
+			}
+			timerOn = true;
 		}
 	}
 }

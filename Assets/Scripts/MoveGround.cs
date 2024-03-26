@@ -12,6 +12,7 @@ public class MoveGround : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        player = FindAnyObjectByType<Player>();
     }
 
     // Update is called once per frame

@@ -11,10 +11,6 @@ public class SectionTrigger : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log("3D");
-		Debug.Log(other.tag);
-		Debug.Log(this.tag);
-
 		// create new blocks
 		if (other.gameObject.CompareTag("NewBlock") && this.CompareTag("Player"))
 		{			
@@ -29,7 +25,7 @@ public class SectionTrigger : MonoBehaviour
 				Instantiate(newBlock, new Vector3(other.transform.position.x + 960, 0, 0), Quaternion.identity,
 					GameObject.FindAnyObjectByType<Canvas>().transform);
 
-				MoveBlocks(lines);
+ 				MoveBlocks(lines, newBlock);
 				newBlock.CreateObstacle();
 
 				// create new background movable image as child to background Image
@@ -41,24 +37,19 @@ public class SectionTrigger : MonoBehaviour
 		else if (other.gameObject.CompareTag("DeleteTrigger") && 
 			(this.CompareTag("Block") || this.CompareTag("Midground")))
 		{
-			Debug.Log("DELETING");
 			if (this.CompareTag("Block"))
 			{
-				Debug.Log("- block!");
-				Debug.Log(this.name);
 				Destroy(block);
 			}
 			else if (this.CompareTag("Midground"))
 			{
-				Debug.Log("- image!");
-				Debug.Log(this.name);
 				Destroy(backgroundImage);
 			}
 		}
 	}
 
 	// Moving block depends on number of lines
-	private void MoveBlocks(int lines)
+	private void MoveBlocks(int lines, Block newBlock)
 	{
 		switch(lines)
 		{

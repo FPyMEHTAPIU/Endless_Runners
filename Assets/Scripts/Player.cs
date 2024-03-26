@@ -6,24 +6,21 @@ using UnityEditor;
 
 public class Player : MonoBehaviour
 {
-    public int health = 100;
-    public float speed = 400.0f;
-    public float maxSpeed = 500.0f;
+	public int health = 100;
+	public float speed = 400.0f;
+	public float maxSpeed = 500.0f;
 
-    private int coins = 0;
-	private GameObject deleteTrigger = null;
+	private int coins = 0;
 
 	// Start is called before the first frame update
 	void Start()
-    {
+	{
 
-		//rb.velocity += new Vector3(0, -100, 0);
-        deleteTrigger = GameObject.FindGameObjectWithTag("DeleteTrigger");
-    }
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
+	// Update is called once per frame
+	void Update()
+	{
 		
 	}
 }

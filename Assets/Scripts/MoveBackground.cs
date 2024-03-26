@@ -8,7 +8,7 @@ public class MoveBackground : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = FindAnyObjectByType<Player>();
     }
 
     // Update is called once per frame
