@@ -84,35 +84,23 @@ public class Block : MonoBehaviour
 		}
 	}
 
-	// TODO: add calculation object, where obstacles must have space between each other at the same block (around 300)
 	private int[] CalculateObstaclesPosition(int obstacleTotalNumber)
 	{
-		int[] positions = new int[obstacleTotalNumber]; 
-		for (int i = 0; i < obstacleTotalNumber; i++)
+		int[] positions = new int[obstacleTotalNumber];
+		if (obstacleTotalNumber > 1)
 		{
-			positions[i] = Random.Range(100, 1820);
-
-			// FIX IT!
-			/*if (i > 0 && !((positions[i] - positions[i - 1] < 300) || 
-				(positions[i] - positions[i - 1] > 300)))
+			int positionGap = 1820 / obstacleTotalNumber;
+			for (int i = 0; i < obstacleTotalNumber; i++)
 			{
-				if (positions[i - 1] < 400)
-				{
-					positions[i] += 300;
-				}
-				else if (positions[i - 1] > 1520)
-				{
-					positions[i] -= 300;
-				}
+				if (i == 0)
+					positions[i] = Random.Range(100, positionGap);
 				else
-				{
-					int choose = Random.Range(0, 2);
-					if (choose == 0)
-						positions[i] -= 300;
-					else
-						positions[i] += 300;
-				}
-			}*/
+					positions[i] = Random.Range(positions[i - 1] + 300, positionGap * (i + 1));
+			}
+		}
+		else if (obstacleTotalNumber == 1)
+		{
+			positions[0] = Random.Range(100, 1820);
 		}
 		return positions;
 	}
