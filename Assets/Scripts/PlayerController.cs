@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR;
@@ -14,11 +15,13 @@ public class PlayerController : MonoBehaviour
 	public bool isJump = false;
 	public bool byWall = false;
 	public bool timerOn = false;
+	public bool canShoot = true;
 
 	[Range(0f, 1000.0f)]
 	public float jumpForce = 250.0f;
 	public float fallMultiplier = 60f;
 	public float jumpMultiplier = 200.0f;
+	public float shootTimer = 0.0f;
 	private float timer = 0.0f;
 
 	private Animator animator = null;
@@ -55,6 +58,20 @@ public class PlayerController : MonoBehaviour
 			{
 				rb.velocity = Vector3.right * player.speed / 8;
 				timerOn = false;
+			}
+		}
+
+		if (Input.GetButtonDown("Fire1") && canShoot)
+		{
+			Shoot();
+		}
+
+		if (!canShoot)
+		{
+			shootTimer -= Time.deltaTime;
+			if (shootTimer <= 0)
+			{
+				canShoot = true;
 			}
 		}
 		Debug.Log("Timer: " + timerOn.ToString() + " and velocity: " + rb.velocity);
@@ -109,12 +126,6 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	private void FixedUpdate()
-	{
-		
-	}
-
-	// FIX THIS JUMP!!!
 	private void Jump()
 	{
 		isJump = true;
@@ -150,5 +161,18 @@ public class PlayerController : MonoBehaviour
 			}
 			timerOn = true;
 		}
+	}
+
+	private void Shoot()
+	{
+		shootTimer = 0.5f;
+		GameObject arrow = player.projectilePrefab;
+		if (arrow)
+		{
+			arrow.GetComponent<Projectile>().fromPlayer = true;
+			Instantiate(arrow, player.projectileSpawnPoint.position, Quaternion.identity,
+					GameObject.FindAnyObjectByType<Canvas>().transform);
+		}
+		canShoot = false;
 	}
 }
