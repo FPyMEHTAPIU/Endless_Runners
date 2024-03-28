@@ -14,8 +14,7 @@ public class GameController : MonoBehaviour
 	public BoxCollider creatingTrigger = null;
 	public GameObject blockPrefab = null;
 	public Canvas canvas = null;
-
-	private int obstaclesCount = 0;
+	public int score = 0;
 
 	// Start is called before the first frame update
 	void Start()
@@ -34,7 +33,7 @@ public class GameController : MonoBehaviour
 		instance = this;
 	}
 
-	internal int CreateBlock(GameObject block, Collider other, GameObject backgroundImage)
+	internal void CreateBlock(GameObject block, Collider other, GameObject backgroundImage)
 	{
 		Block newBlock = block.GetComponent<Block>();
 		if (newBlock)
@@ -48,15 +47,16 @@ public class GameController : MonoBehaviour
 				GameObject.FindAnyObjectByType<Canvas>().transform);
 
 			MoveBlocks(lines);
-			obstaclesCount = newBlock.CreateObstacle();
-			if (obstaclesCount == 0)
+			bool isObstacles = Random.value > 0.5f;
+			if (isObstacles)
+				newBlock.CreateObstacle();
+			else
 				newBlock.SpawnEnemies();
 
 			// create new background movable image as child to background Image
 			Instantiate(backgroundImage, new Vector3(other.transform.position.x + 1000, 0, 0), Quaternion.identity,
 				GameObject.FindGameObjectWithTag("Background").transform);
 		}
-		return obstaclesCount;
 	}
 
 	// Moving block depends on number of lines

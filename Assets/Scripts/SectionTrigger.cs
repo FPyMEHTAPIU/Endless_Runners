@@ -9,12 +9,31 @@ public class SectionTrigger : MonoBehaviour
 	public GameObject backgroundImage = null;
 	public GameObject block = null;
 
+	public float timer = 0.0f;
+	public bool timerOn = false;
+
+	private void Update()
+	{
+		if (timerOn)
+		{
+			timer -= Time.deltaTime;
+			if (timer <= 0)
+				timerOn = false;
+		}
+	}
+
 	private void OnTriggerEnter(Collider other)
 	{
 		// create new blocks
 		if (other.gameObject.CompareTag("NewBlock") && this.CompareTag("Player"))
 		{
-			GameController.instance.CreateBlock(block, other, backgroundImage);
+			if (!timerOn)
+			{
+				GameController.instance.CreateBlock(block, other, backgroundImage);
+				timerOn = true;
+				timer = 3.0f;
+			}
+				
 		}
 		// Delete old blocks
 		else if (other.gameObject.CompareTag("DeleteTrigger") && 

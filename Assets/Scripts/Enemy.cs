@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +14,7 @@ public class Enemy : MonoBehaviour
 	public GameObject projectilePrefab = null;
 	public Sprite[] sprites = new Sprite[2];
 	public Image enemyImage = null;
+	public GameObject item = null;
 
 	private Player player = null;
 	private float shootTimer = 0.0f;
@@ -55,7 +58,7 @@ public class Enemy : MonoBehaviour
 		}
 
 		if (health <= 0)
-			Destroy(gameObject);
+			Die();
 		// TODO:
 		// Make Punch for melee enemy
 	}
@@ -77,5 +80,64 @@ public class Enemy : MonoBehaviour
 	{
 		if (collision.collider.CompareTag("Player"))
 			player.health -= damage;
+	}
+
+	private void Die()
+	{
+		player = FindAnyObjectByType<Player>();
+		bool drop = Random.value > 0.5f;
+		if (drop)
+		{
+			// drop object
+			Item newItem = item.GetComponent<Item>();
+			if (newItem)
+			{
+				Instantiate(newItem, transform.position, Quaternion.identity, 
+							GameObject.FindGameObjectsWithTag("TopBlock").Last().transform);
+				int chooseType = Random.Range(0, 10);
+				if (chooseType == 3)
+				{
+					newItem.type = Item.itemType.key;
+					newItem.value = 1;
+					newItem.isFlask = false;
+				}
+				else
+				{
+					if (player.health <= player.maxHealth / 2)
+					{
+						chooseType = Random.Range(0, 2);
+					}
+					else if (player.health == player.maxHealth)
+					{
+						chooseType = 2;
+					}
+					else
+					{
+						chooseType = Random.Range(0, 3);
+					}
+					switch (chooseType)
+					{
+						case 0:
+							newItem.type = Item.itemType.healthFlask;
+							newItem.value = 25;
+							newItem.isFlask = true;
+							break;
+						case 1:
+							newItem.type = Item.itemType.largeHealthFlask;
+							newItem.value = 50;
+							newItem.isFlask = true;
+							break;
+						case 2:
+							newItem.type = Item.itemType.coin;
+							newItem.value = 1;
+							newItem.isFlask = false;
+							break;
+						default: break;
+					}
+				}
+				newItem.itemImage.sprite = newItem.sprites[chooseType];
+			}
+		}
+		Destroy(gameObject);
 	}
 }

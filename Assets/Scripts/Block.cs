@@ -43,9 +43,9 @@ public class Block : MonoBehaviour
 		return lines;
 	}
 
-	internal int CreateObstacle()
+	internal void CreateObstacle()
 	{
-		int obstacleCount = Random.Range(0, maxObstacleCount + 1);
+		int obstacleCount = Random.Range(1, maxObstacleCount + 1);
 		// Get area
 		if (spawnArea)
 		{
@@ -83,7 +83,6 @@ public class Block : MonoBehaviour
 				}
 			}
 		}
-		return obstacleCount;
 	}
 
 	private int[] CalculateObstaclesPosition(int obstacleTotalNumber)
@@ -109,8 +108,6 @@ public class Block : MonoBehaviour
 
 	internal void SpawnEnemies()
 	{
-		// TODO:
-
 		// Choose random number of enemies from 1 to 2
 		int enemiesCount = Random.Range(1, 3);
 
@@ -135,9 +132,6 @@ public class Block : MonoBehaviour
 				else
 					enemy.enemyImage.sprite = enemy.sprites[1];
 			}
-
 		}
-		// Instantiate it in spawn area
-
 	}
 }
