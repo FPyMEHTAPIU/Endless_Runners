@@ -6,20 +6,16 @@ using UnityEngine.UIElements;
 public class MoveGround : MonoBehaviour
 {
     public Player player = null;
-    private Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         player = FindAnyObjectByType<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // TODO: fix speed
-        //rb.velocity = new Vector3(-player.speed, 0, 0);
 		transform.position += new Vector3(-player.speed, 0, 0) * Time.deltaTime;
 	}
 }

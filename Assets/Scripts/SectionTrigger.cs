@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -29,11 +30,29 @@ public class SectionTrigger : MonoBehaviour
 		{
 			if (!timerOn)
 			{
-				GameController.instance.CreateBlock(block, other, backgroundImage);
+				// changing first block
+				GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+
+ 				int lines = blocks.Last().GetComponent<Block>().GenerateBlock();
+				bool sameLines = lines == GameController.instance.linesInGame;
+				GameController.instance.linesInGame = lines;
+				
+				ImageChanger changer = blocks.Last().GetComponent<Block>().GetComponent<ImageChanger>();
+				if (changer)
+				{
+					bool lastBlock = false;
+					changer.ChangeRightBox(sameLines, lastBlock);
+				}
+
+				GameController.instance.CreateBlock(block, other, lines, sameLines);
 				timerOn = true;
 				timer = 3.0f;
-			}
-				
+			}	
+		}
+		// create new background
+		if (other.gameObject.CompareTag("NewBackground") && this.CompareTag("Player"))
+		{
+			GameController.instance.CreateBackground(backgroundImage, other);
 		}
 		// Delete old blocks
 		else if (other.gameObject.CompareTag("DeleteTrigger") && 

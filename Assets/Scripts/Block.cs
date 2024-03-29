@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Block : MonoBehaviour
 {
@@ -30,9 +31,6 @@ public class Block : MonoBehaviour
 
 	internal int GenerateBlock()
 	{
-		bottomSoil = GameController.instance.bottomSoil;
-		middleSoil = GameController.instance.middleSoil;
-		topSoil = GameController.instance.topSoil;
 		int lines = Random.Range(GameController.instance.linesInGame - 1, GameController.instance.linesInGame + 2);
 		
 		if (lines < 1)
@@ -49,7 +47,7 @@ public class Block : MonoBehaviour
 		// Get area
 		if (spawnArea)
 		{
-			int[] positions = CalculateObstaclesPosition(obstacleCount);
+			int[] positions = CalculatePosition(obstacleCount);
 			// Create Obstacle GameObject
 			Obstacle obstacle = obstaclePrefab.GetComponent<Obstacle>();
 			if (obstacle)
@@ -85,12 +83,12 @@ public class Block : MonoBehaviour
 		}
 	}
 
-	private int[] CalculateObstaclesPosition(int obstacleTotalNumber)
+	private int[] CalculatePosition(int obstacleTotalNumber)
 	{
 		int[] positions = new int[obstacleTotalNumber];
 		if (obstacleTotalNumber > 1)
 		{
-			int positionGap = 1820 / obstacleTotalNumber;
+			int positionGap = 2535 / obstacleTotalNumber;
 			for (int i = 0; i < obstacleTotalNumber; i++)
 			{
 				if (i == 0)
@@ -101,7 +99,7 @@ public class Block : MonoBehaviour
 		}
 		else if (obstacleTotalNumber == 1)
 		{
-			positions[0] = Random.Range(100, 1820);
+			positions[0] = Random.Range(100, 2535);
 		}
 		return positions;
 	}
@@ -112,7 +110,7 @@ public class Block : MonoBehaviour
 		int enemiesCount = Random.Range(1, 3);
 
 		// Calculating positions for enemies
-		int[] positions = CalculateObstaclesPosition(enemiesCount);
+		int[] positions = CalculatePosition(enemiesCount);
 
 		Enemy enemy = enemyPrefab.GetComponent<Enemy>();
 		if (enemy)

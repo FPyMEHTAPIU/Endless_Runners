@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -33,29 +33,29 @@ public class GameController : MonoBehaviour
 		instance = this;
 	}
 
-	internal void CreateBlock(GameObject block, Collider other, GameObject backgroundImage)
+	internal void CreateBlock(GameObject block, Collider other, int lines, bool sameLines)
 	{
 		Block newBlock = block.GetComponent<Block>();
 		if (newBlock)
 		{
-			int lines = newBlock.GenerateBlock();
-
-			GameController.instance.linesInGame = lines;
-
 			// create new ground block inside Canvas
-			Instantiate(newBlock, new Vector3(other.transform.position.x + 960, 0, 0), Quaternion.identity,
-				GameObject.FindAnyObjectByType<Canvas>().transform);
-
+			Instantiate(newBlock, new Vector3(other.transform.position.x + 1675, 0, 0), Quaternion.identity,
+						GameObject.FindAnyObjectByType<Canvas>().transform);
+				
 			MoveBlocks(lines);
+
+			// changing new block (last block)
+			ImageChanger changer = GameObject.FindGameObjectsWithTag("Block").Last().GetComponent<Block>().GetComponent<ImageChanger>();
+			if (changer)
+			{
+				bool lastBlock = true;
+				changer.ChangeRightBox(sameLines, lastBlock);
+			}
 			bool isObstacles = Random.value > 0.5f;
 			if (isObstacles)
 				newBlock.CreateObstacle();
 			else
 				newBlock.SpawnEnemies();
-
-			// create new background movable image as child to background Image
-			Instantiate(backgroundImage, new Vector3(other.transform.position.x + 1000, 0, 0), Quaternion.identity,
-				GameObject.FindGameObjectWithTag("Background").transform);
 		}
 	}
 
@@ -82,5 +82,12 @@ public class GameController : MonoBehaviour
 				break;
 			default: break;
 		}
+	}
+
+	internal void CreateBackground(GameObject backgroundImage, Collider other)
+	{
+		// create new background movable image as child to background Image
+		Instantiate(backgroundImage, new Vector3(other.transform.position.x + 1675, 0, 0), Quaternion.identity,
+					GameObject.FindGameObjectWithTag("Background").transform);
 	}
 }

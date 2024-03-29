@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (Mathf.Abs(transform.position.y - player.transform.position.y) <= 50 && 
+		if (Mathf.Abs(transform.position.y - player.transform.position.y) <= 25 && 
 					transform.position.x - player.transform.position.x > 0 && !isMelee && canShoot)
 		{
 			Shoot();
