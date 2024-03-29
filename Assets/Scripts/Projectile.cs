@@ -15,10 +15,14 @@ public class Projectile : MonoBehaviour
 	public Sprite[] sprites = new Sprite[2];
 	public Image projectileImage = null;
 
+	private Animator animator;
+	private Player player;
+
 	// Start is called before the first frame update
 	void Start()
 	{
-		Animator animator = GetComponent<Animator>();
+		player = FindAnyObjectByType<Player>();
+		animator = GetComponent<Animator>();
 		if (fromPlayer)
 		{
 			speed = 1000.0f;
@@ -63,6 +67,12 @@ public class Projectile : MonoBehaviour
 		if (collision.collider.CompareTag("Player") && !fromPlayer)
 		{
 			collision.gameObject.GetComponent<Player>().health -= damage;
+			if (player)
+			{
+				Animator playerAnimator = player.GetComponent<Animator>();
+				if (playerAnimator)
+					playerAnimator.CrossFade("PlayerHit", 0);
+			}
 			Destroy(gameObject);
 		}
 

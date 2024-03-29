@@ -45,7 +45,8 @@ public class GameController : MonoBehaviour
 			MoveBlocks(lines);
 
 			// changing new block (last block)
-			ImageChanger changer = GameObject.FindGameObjectsWithTag("Block").Last().GetComponent<Block>().GetComponent<ImageChanger>();
+			ImageChanger changer = GameObject.FindGameObjectsWithTag("Block").Last().GetComponent<Block>().
+									GetComponent<ImageChanger>();
 			if (changer)
 			{
 				bool lastBlock = true;

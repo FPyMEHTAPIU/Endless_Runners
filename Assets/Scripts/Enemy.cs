@@ -17,13 +17,14 @@ public class Enemy : MonoBehaviour
 	public GameObject item = null;
 
 	private Player player = null;
-	private float shootTimer = 0.0f;
-	private bool canShoot = true;
+	private float attackTimer = 0.0f;
+	private bool canAttack = true;
+	private Animator animator;
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		Animator animator = GetComponent<Animator>();
+		animator = GetComponent<Animator>();
 		player = FindAnyObjectByType<Player>();
 		if (isMelee)
 		{
@@ -45,27 +46,31 @@ public class Enemy : MonoBehaviour
 	void Update()
 	{
 		if (Mathf.Abs(transform.position.y - player.transform.position.y) <= 25 && 
-					transform.position.x - player.transform.position.x > 0 && !isMelee && canShoot)
+					transform.position.x - player.transform.position.x > 0 && !isMelee && canAttack)
 		{
 			Shoot();
 		}
 
-		if (!canShoot)
+		if (transform.position.x - player.transform.position.x <= 350 && 
+			Mathf.Abs(transform.position.y - player.transform.position.y) <= 25 && isMelee && canAttack)
 		{
-			shootTimer -= Time.deltaTime;
-			if (shootTimer <= 0)
-				canShoot = true;
+			Attack();
+		}
+
+		if (!canAttack)
+		{
+			attackTimer -= Time.deltaTime;
+			if (attackTimer <= 0)
+				canAttack = true;
 		}
 
 		if (health <= 0)
 			Die();
-		// TODO:
-		// Make Punch for melee enemy
 	}
 
 	private void Shoot()
 	{
-		shootTimer = 2.0f;
+		attackTimer = 2.0f;
 		GameObject arrow = projectilePrefab;
 		if (arrow)
 		{
@@ -73,70 +78,81 @@ public class Enemy : MonoBehaviour
 			Instantiate(arrow, projectileSpawnPoint.position, Quaternion.identity,
 					GameObject.FindAnyObjectByType<Canvas>().transform);
 		}
-		canShoot = false;
+		canAttack = false;
+	}
+
+	private void Attack()
+	{
+		attackTimer = 2.0f;
+		if (animator)
+		{
+			animator.CrossFade("PlantAttack", 0);
+		}
+		canAttack = false;
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
 		if (collision.collider.CompareTag("Player"))
+		{
 			player.health -= damage;
+			Animator playerAnimator = player.GetComponent<Animator>();
+			if (playerAnimator)
+				playerAnimator.CrossFade("PlayerHit", 0);
+		}
 	}
 
 	private void Die()
 	{
 		player = FindAnyObjectByType<Player>();
-		bool drop = Random.value > 0.5f;
-		if (drop)
+		// drop object
+		Item newItem = item.GetComponent<Item>();
+		if (newItem)
 		{
-			// drop object
-			Item newItem = item.GetComponent<Item>();
-			if (newItem)
+			Instantiate(newItem, transform.position, Quaternion.identity, 
+						GameObject.FindGameObjectsWithTag("TopBlock").Last().transform);
+			int chooseType = Random.Range(0, 10);
+			if (chooseType == 3)
 			{
-				Instantiate(newItem, transform.position, Quaternion.identity, 
-							GameObject.FindGameObjectsWithTag("TopBlock").Last().transform);
-				int chooseType = Random.Range(0, 10);
-				if (chooseType == 3)
+				newItem.type = Item.itemType.key;
+				newItem.value = 1;
+				newItem.isFlask = false;
+			}
+			else
+			{
+				if (player.health <= player.maxHealth / 2)
 				{
-					newItem.type = Item.itemType.key;
-					newItem.value = 1;
-					newItem.isFlask = false;
+					chooseType = Random.Range(0, 2);
+				}
+				else if (player.health == player.maxHealth)
+				{
+					chooseType = 2;
 				}
 				else
 				{
-					if (player.health <= player.maxHealth / 2)
-					{
-						chooseType = Random.Range(0, 2);
-					}
-					else if (player.health == player.maxHealth)
-					{
-						chooseType = 2;
-					}
-					else
-					{
-						chooseType = Random.Range(0, 3);
-					}
-					switch (chooseType)
-					{
-						case 0:
-							newItem.type = Item.itemType.healthFlask;
-							newItem.value = 25;
-							newItem.isFlask = true;
-							break;
-						case 1:
-							newItem.type = Item.itemType.largeHealthFlask;
-							newItem.value = 50;
-							newItem.isFlask = true;
-							break;
-						case 2:
-							newItem.type = Item.itemType.coin;
-							newItem.value = 1;
-							newItem.isFlask = false;
-							break;
-						default: break;
-					}
+					chooseType = Random.Range(0, 3);
 				}
-				newItem.itemImage.sprite = newItem.sprites[chooseType];
+				switch (chooseType)
+				{
+					case 0:
+						newItem.type = Item.itemType.healthFlask;
+						newItem.value = 25;
+						newItem.isFlask = true;
+						break;
+					case 1:
+						newItem.type = Item.itemType.largeHealthFlask;
+						newItem.value = 50;
+						newItem.isFlask = true;
+						break;
+					case 2:
+						newItem.type = Item.itemType.coin;
+						newItem.value = 1;
+						newItem.isFlask = false;
+						break;
+					default: break;
+				}
 			}
+			newItem.itemImage.sprite = newItem.sprites[chooseType];
 		}
 		Destroy(gameObject);
 	}

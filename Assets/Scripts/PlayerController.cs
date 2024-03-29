@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
 			if (timer <= 0)
 			{
 				rb.velocity = Vector3.right * player.speed / 8;
+				animator.CrossFade("PlayerRun", 0);
 				timerOn = false;
 			}
 		}
@@ -110,7 +111,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (collision.collider.CompareTag("TopBlock"))
 		{
-			// set onGround in exit AFTER set in enter or create different logic
+			// set onGround in exit AFTER set in enter
 			collisionCount--;
 			if (collisionCount <= 0)
 				onGround = false;
@@ -149,18 +150,19 @@ public class PlayerController : MonoBehaviour
 			switch(other.gameObject.GetComponent<Obstacle>().type)
 			{
 				case Obstacle.obstacleType.spike:
-					animator.CrossFade("Hit", 0);
+					animator.CrossFade("PlayerHit", 0);
 					player.health -= other.gameObject.GetComponent<Obstacle>().damage;
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
 					break;
 				case Obstacle.obstacleType.slime:
-					animator.CrossFade("Slow", 0);
+					animator.CrossFade("SlowRun", 0);
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
 					break;
 				default: break;
 			}
 			timerOn = true;
 		}
+
 	}
 
 	private void Shoot()
