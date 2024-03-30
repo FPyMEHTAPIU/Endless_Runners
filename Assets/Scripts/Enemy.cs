@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ public class Enemy : MonoBehaviour
 	public Sprite[] sprites = new Sprite[2];
 	public Image enemyImage = null;
 	public GameObject item = null;
+	public float speedDecrement = 60.0f;
 
 	private Player player = null;
 	private float attackTimer = 0.0f;
@@ -96,9 +98,17 @@ public class Enemy : MonoBehaviour
 		if (collision.collider.CompareTag("Player"))
 		{
 			player.health -= damage;
-			Animator playerAnimator = player.GetComponent<Animator>();
-			if (playerAnimator)
-				playerAnimator.CrossFade("PlayerHit", 0);
+			player.GetComponent<Rigidbody>().velocity -= Vector3.right * speedDecrement;
+			PlayerController.instance.timer = 5.0f;
+			PlayerController.instance.timerOn = true;
+
+			if (PlayerController.instance.animator)
+				PlayerController.instance.animator.CrossFade("PlayerHit", 0);
+
+			if (!player.monsterAlive && PlayerController.instance.monster)
+			{
+				PlayerController.instance.CreateMonster();
+			}
 		}
 	}
 

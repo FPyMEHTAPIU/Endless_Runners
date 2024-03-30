@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
 
 	public Sprite[] sprites = new Sprite[2];
 	public Image playerImage = null;
+	public bool monsterAlive = false;
 
 	// Start is called before the first frame update
 	void Start()

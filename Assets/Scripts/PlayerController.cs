@@ -8,6 +8,7 @@ using UnityEngine.XR;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+	static public PlayerController instance;
 	private Rigidbody rb;
 	private Player player;
 	public bool onGround = false;
@@ -22,26 +23,39 @@ public class PlayerController : MonoBehaviour
 	public float fallMultiplier = 60f;
 	public float jumpMultiplier = 200.0f;
 	public float shootTimer = 0.0f;
-	private float timer = 0.0f;
+	public float timer = 0.0f;
+	public GameObject mainMonster = null;
+	public MainMonster monster;
 
-	private Animator animator = null;
+	internal Animator animator = null;
 	private int collisionCount = 0;
 
 	// Start is called before the first frame update
+	private void Start()
+	{
+		
+	}
 	private void Awake()
 	{
+		instance = this;
 		player = GetComponent<Player>();
 		rb = player.GetComponent<Rigidbody>();
 		rb.velocity = new Vector3(player.speed / 8, Physics.gravity.y * (fallMultiplier - 1));
 		animator = player.GetComponent<Animator>();
+
+		monster = mainMonster.GetComponent<MainMonster>();
+		if (mainMonster && monster && !player.monsterAlive)
+		{
+			CreateMonster();
+		}
 	}
 
 	private void Update()
 	{
-		// TODO: fix speed
-		
 		if (onGround && !timerOn)
+		{
 			rb.velocity = new Vector3(player.speed / 8, 0);
+		}
 		else
 			rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
 
@@ -49,6 +63,15 @@ public class PlayerController : MonoBehaviour
 		{
 			onGround = false;
 			Jump();
+		}
+		// TODO: create a monster when stuck at wall
+		if (!player.monsterAlive && player.transform.position.x <= -300)
+		{
+			CreateMonster();
+		}
+		else if (player.monsterAlive)
+		{
+			// DO smth
 		}
 
 		if (timerOn)
@@ -147,16 +170,25 @@ public class PlayerController : MonoBehaviour
 		if (other.gameObject.CompareTag("Damage"))
 		{
 			timer = 5.0f;
-			switch(other.gameObject.GetComponent<Obstacle>().type)
+			monster.monsterPosition = monster.maxPosition;
+			switch (other.gameObject.GetComponent<Obstacle>().type)
 			{
 				case Obstacle.obstacleType.spike:
 					animator.CrossFade("PlayerHit", 0);
 					player.health -= other.gameObject.GetComponent<Obstacle>().damage;
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
+					if (!player.monsterAlive && monster)
+					{
+						CreateMonster();
+					}
 					break;
 				case Obstacle.obstacleType.slime:
 					animator.CrossFade("SlowRun", 0);
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
+					if (!player.monsterAlive && monster)
+					{
+						CreateMonster();
+					}
 					break;
 				default: break;
 			}
@@ -176,5 +208,12 @@ public class PlayerController : MonoBehaviour
 					GameObject.FindAnyObjectByType<Canvas>().transform);
 		}
 		canShoot = false;
+	}
+
+	internal void CreateMonster()
+	{
+		Instantiate(monster, new Vector3(monster.maxPosition, player.transform.position.y, 0),
+											Quaternion.identity, FindAnyObjectByType<Canvas>().transform);
+		player.monsterAlive = true;
 	}
 }
