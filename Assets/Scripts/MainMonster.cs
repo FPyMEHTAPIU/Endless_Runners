@@ -23,10 +23,10 @@ public class MainMonster : MonoBehaviour
 			monsterPosition -= 50.0f * Time.deltaTime;
 		}
 		transform.position = new Vector3(monsterPosition, player.transform.position.y + 100.0f);
-		if (monsterPosition <= minPosition)
+		if ((player.transform.position.x <= 720 || PlayerController.instance.playerHit) 
+			&& monsterPosition < maxPosition)
 		{
-			player.monsterAlive = false;
-			Destroy(gameObject);
+			monsterPosition += 300.0f * Time.deltaTime;
 		}
 	}
 }

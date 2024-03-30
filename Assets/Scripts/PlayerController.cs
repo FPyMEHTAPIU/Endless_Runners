@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 	public bool byWall = false;
 	public bool timerOn = false;
 	public bool canShoot = true;
+	public bool playerHit = false;
 
 	[Range(0f, 1000.0f)]
 	public float jumpForce = 250.0f;
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour
 		animator = player.GetComponent<Animator>();
 
 		monster = mainMonster.GetComponent<MainMonster>();
-		if (mainMonster && monster && !player.monsterAlive)
+		if (mainMonster && monster)
 		{
 			CreateMonster();
 		}
@@ -52,26 +53,20 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
+		Debug.LogWarning(player.transform.position);
 		if (onGround && !timerOn)
 		{
 			rb.velocity = new Vector3(player.speed / 8, 0);
 		}
 		else
+		{
 			rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+		}
 
 		if (Input.GetButtonDown("Jump") && onGround)
 		{
 			onGround = false;
 			Jump();
-		}
-		// TODO: create a monster when stuck at wall
-		if (!player.monsterAlive && player.transform.position.x <= -300)
-		{
-			CreateMonster();
-		}
-		else if (player.monsterAlive)
-		{
-			// DO smth
 		}
 
 		if (timerOn)
@@ -81,6 +76,7 @@ public class PlayerController : MonoBehaviour
 			{
 				rb.velocity = Vector3.right * player.speed / 8;
 				animator.CrossFade("PlayerRun", 0);
+				playerHit = false;
 				timerOn = false;
 			}
 		}
@@ -98,7 +94,6 @@ public class PlayerController : MonoBehaviour
 				canShoot = true;
 			}
 		}
-		Debug.Log("Timer: " + timerOn.ToString() + " and velocity: " + rb.velocity);
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -108,8 +103,10 @@ public class PlayerController : MonoBehaviour
 			collisionCount++;
 			onGround = true;
 			isJump = false;
-			if (!timerOn)
+			if (!timerOn && !playerHit)
+			{
 				rb.velocity = new Vector3(player.speed / 8, 0);
+			}
 			
 			animator.CrossFade("PlayerRun", 0);
 		}
@@ -137,7 +134,9 @@ public class PlayerController : MonoBehaviour
 			// set onGround in exit AFTER set in enter
 			collisionCount--;
 			if (collisionCount <= 0)
+			{
 				onGround = false;
+			}
 			canJump = false;
 		}
 		if (rb.velocity.y < 0 && !isJump && !onGround)
@@ -166,29 +165,20 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		// TODO: Create hit and slow animation
 		if (other.gameObject.CompareTag("Damage"))
 		{
 			timer = 5.0f;
-			monster.monsterPosition = monster.maxPosition;
+			playerHit = true;
 			switch (other.gameObject.GetComponent<Obstacle>().type)
 			{
 				case Obstacle.obstacleType.spike:
 					animator.CrossFade("PlayerHit", 0);
 					player.health -= other.gameObject.GetComponent<Obstacle>().damage;
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
-					if (!player.monsterAlive && monster)
-					{
-						CreateMonster();
-					}
 					break;
 				case Obstacle.obstacleType.slime:
 					animator.CrossFade("SlowRun", 0);
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
-					if (!player.monsterAlive && monster)
-					{
-						CreateMonster();
-					}
 					break;
 				default: break;
 			}
@@ -214,6 +204,5 @@ public class PlayerController : MonoBehaviour
 	{
 		Instantiate(monster, new Vector3(monster.maxPosition, player.transform.position.y, 0),
 											Quaternion.identity, FindAnyObjectByType<Canvas>().transform);
-		player.monsterAlive = true;
 	}
 }

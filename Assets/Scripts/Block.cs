@@ -72,7 +72,7 @@ public class Block : MonoBehaviour
 						case 1:
 							obstacle.type = Obstacle.obstacleType.slime;
 							obstacle.damage = 0;
-							obstacle.speedDecrement = 120;
+							obstacle.speedDecrement = 100;
 							break;
 						default: break;
 					}

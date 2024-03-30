@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
 	public Sprite[] sprites = new Sprite[2];
 	public Image enemyImage = null;
 	public GameObject item = null;
-	public float speedDecrement = 60.0f;
+	public float speedDecrement = 150.0f;
 
 	private Player player = null;
 	private float attackTimer = 0.0f;
@@ -101,14 +101,10 @@ public class Enemy : MonoBehaviour
 			player.GetComponent<Rigidbody>().velocity -= Vector3.right * speedDecrement;
 			PlayerController.instance.timer = 5.0f;
 			PlayerController.instance.timerOn = true;
+			PlayerController.instance.playerHit = true;
 
 			if (PlayerController.instance.animator)
 				PlayerController.instance.animator.CrossFade("PlayerHit", 0);
-
-			if (!player.monsterAlive && PlayerController.instance.monster)
-			{
-				PlayerController.instance.CreateMonster();
-			}
 		}
 	}
 
