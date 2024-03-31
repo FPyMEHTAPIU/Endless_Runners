@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMonster : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class MainMonster : MonoBehaviour
 	public float monsterPosition;
 	public float minPosition = -150.0f;
 	public float maxPosition = 150.0f;
+
+	public Image monsterImage = null;
+	public Sprite[] sprites = new Sprite[2];
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -28,5 +33,7 @@ public class MainMonster : MonoBehaviour
 		{
 			monsterPosition += 300.0f * Time.deltaTime;
 		}
+		// Set moster as upper layer than blocks
+		transform.SetSiblingIndex(9);
 	}
 }

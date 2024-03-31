@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
 	public Sprite[] sprites = new Sprite[2];
 	public Image enemyImage = null;
 	public GameObject item = null;
-	public float speedDecrement = 150.0f;
+	public float speedDecrement = 50.0f;
 	public HealthBar healthBar = null;
 
 	private Player player = null;
@@ -102,7 +102,7 @@ public class Enemy : MonoBehaviour
 			player.health -= damage;
 			player.healthBar.SetHealth(player.health);
 			player.GetComponent<Rigidbody>().velocity -= Vector3.right * speedDecrement;
-			PlayerController.instance.timer = 5.0f;
+			PlayerController.instance.timer = 3.0f;
 			PlayerController.instance.timerOn = true;
 			PlayerController.instance.playerHit = true;
 

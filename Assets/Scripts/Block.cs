@@ -23,12 +23,6 @@ public class Block : MonoBehaviour
 		creatingTrigger.isTrigger = true;
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-		
-	}
-
 	internal int GenerateBlock()
 	{
 		int lines = Random.Range(GameController.instance.linesInGame - 1, GameController.instance.linesInGame + 2);
@@ -67,7 +61,7 @@ public class Block : MonoBehaviour
 						case 0:
 							obstacle.type = Obstacle.obstacleType.spike;
 							obstacle.damage = 25;
-							obstacle.speedDecrement = 60;
+							obstacle.speedDecrement = 70;
 							break;
 						case 1:
 							obstacle.type = Obstacle.obstacleType.slime;

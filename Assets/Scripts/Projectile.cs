@@ -72,9 +72,6 @@ public class Projectile : MonoBehaviour
 			if (player)
 			{
 				PlayerController.instance.animator.CrossFade("PlayerHit", 0);
-				/*Animator playerAnimator = player.GetComponent<Animator>();
-				if (playerAnimator)
-					playerAnimator.CrossFade("PlayerHit", 0);*/
 			}
 			Destroy(gameObject);
 		}

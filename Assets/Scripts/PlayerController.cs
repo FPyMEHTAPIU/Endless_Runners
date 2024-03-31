@@ -31,11 +31,6 @@ public class PlayerController : MonoBehaviour
 	internal Animator animator = null;
 	private int collisionCount = 0;
 
-	// Start is called before the first frame update
-	private void Start()
-	{
-		
-	}
 	private void Awake()
 	{
 		instance = this;
@@ -53,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		Debug.LogWarning(player.transform.position);
+		//Debug.LogWarning(player.transform.position);
 		if (onGround && !timerOn)
 		{
 			rb.velocity = new Vector3(player.speed / 8, 0);
@@ -115,6 +110,11 @@ public class PlayerController : MonoBehaviour
 		{
 			byWall = true;
 			rb.velocity = Vector3.right * player.speed / 10;
+		}
+
+		if (collision.collider.CompareTag("Monster"))
+		{
+			player.health = 0;
 		}
 	}
 
@@ -185,7 +185,6 @@ public class PlayerController : MonoBehaviour
 			player.healthBar.SetHealth(player.health);
 			timerOn = true;
 		}
-
 	}
 
 	private void Shoot()

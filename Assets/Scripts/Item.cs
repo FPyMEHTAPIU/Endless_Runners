@@ -7,6 +7,8 @@ public class Item : MonoBehaviour
 {
 	public int value = 1;
 	public bool isFlask = false;
+
+	public UIHandler uiVar;
 	public enum itemType
 	{
 		healthFlask,
@@ -24,6 +26,7 @@ public class Item : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
+		uiVar = FindAnyObjectByType<UIHandler>();
 		player = FindAnyObjectByType<Player>();
 		Animator animator = GetComponent<Animator>();
 		if (animator)
@@ -48,12 +51,6 @@ public class Item : MonoBehaviour
 		
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
-
 	private void OnCollisionEnter(Collision collision)
 	{
 		if (collision.collider.CompareTag("Player"))
@@ -72,10 +69,12 @@ public class Item : MonoBehaviour
 				if (type == itemType.coin)
 				{
 					player.coins += value;
+					uiVar.SetCoinText(player.coins);
 				}
 				else
 				{
 					player.keys += value;
+					uiVar.SetKeyText(player.keys);
 				}
 			}
 			Destroy(gameObject);
