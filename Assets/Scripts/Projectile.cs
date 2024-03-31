@@ -66,12 +66,15 @@ public class Projectile : MonoBehaviour
 
 		if (collision.collider.CompareTag("Player") && !fromPlayer)
 		{
-			collision.gameObject.GetComponent<Player>().health -= damage;
+			/*collision.gameObject.GetComponent<Player>()*/
+			player.health -= damage;
+			player.healthBar.SetHealth(player.health);
 			if (player)
 			{
-				Animator playerAnimator = player.GetComponent<Animator>();
+				PlayerController.instance.animator.CrossFade("PlayerHit", 0);
+				/*Animator playerAnimator = player.GetComponent<Animator>();
 				if (playerAnimator)
-					playerAnimator.CrossFade("PlayerHit", 0);
+					playerAnimator.CrossFade("PlayerHit", 0);*/
 			}
 			Destroy(gameObject);
 		}
@@ -79,6 +82,8 @@ public class Projectile : MonoBehaviour
 		if(collision.collider.CompareTag("Enemy") && fromPlayer)
 		{
 			collision.gameObject.GetComponent<Enemy>().health -= damage;
+			collision.gameObject.GetComponent<Enemy>().healthBar.
+				SetEnemyHealth(collision.gameObject.GetComponent<Enemy>().health);
 			Destroy(gameObject);
 		}
 	}

@@ -65,6 +65,7 @@ public class Item : MonoBehaviour
 				{
 					player.health = player.maxHealth;
 				}
+				player.healthBar.SetHealth(player.health);
 			}
 			else
 			{

@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
 	public Image enemyImage = null;
 	public GameObject item = null;
 	public float speedDecrement = 150.0f;
+	public HealthBar healthBar = null;
 
 	private Player player = null;
 	private float attackTimer = 0.0f;
@@ -42,6 +43,7 @@ public class Enemy : MonoBehaviour
 			if (animator)
 				animator.CrossFade("Slime", 0);
 		}
+		healthBar.SetEnemyMaxHealth(health);
 	}
 
 	// Update is called once per frame
@@ -98,6 +100,7 @@ public class Enemy : MonoBehaviour
 		if (collision.collider.CompareTag("Player"))
 		{
 			player.health -= damage;
+			player.healthBar.SetHealth(player.health);
 			player.GetComponent<Rigidbody>().velocity -= Vector3.right * speedDecrement;
 			PlayerController.instance.timer = 5.0f;
 			PlayerController.instance.timerOn = true;

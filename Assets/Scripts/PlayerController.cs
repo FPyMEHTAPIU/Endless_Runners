@@ -182,6 +182,7 @@ public class PlayerController : MonoBehaviour
 					break;
 				default: break;
 			}
+			player.healthBar.SetHealth(player.health);
 			timerOn = true;
 		}
 

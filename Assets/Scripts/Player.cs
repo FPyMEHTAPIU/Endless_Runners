@@ -19,10 +19,12 @@ public class Player : MonoBehaviour
 	public Sprite[] sprites = new Sprite[2];
 	public Image playerImage = null;
 
+	public HealthBar healthBar = null;
+
 	// Start is called before the first frame update
 	void Start()
 	{
-
+		healthBar.SetMaxHealth(maxHealth);
 	}
 
 	// Update is called once per frame
