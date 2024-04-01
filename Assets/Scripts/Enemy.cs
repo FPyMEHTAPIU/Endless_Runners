@@ -107,7 +107,17 @@ public class Enemy : MonoBehaviour
 			PlayerController.instance.playerHit = true;
 
 			if (PlayerController.instance.animator)
-				PlayerController.instance.animator.CrossFade("PlayerHit", 0);
+			{
+				if (!player.bonusPlayer)
+				{
+					PlayerController.instance.animator.CrossFade("PlayerHit", 0);
+				}
+				else
+				{
+					PlayerController.instance.animator.CrossFade("BonusPlayerHit", 0);
+				}
+			}
+				
 		}
 	}
 

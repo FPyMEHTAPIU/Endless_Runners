@@ -11,6 +11,7 @@ public class MainMonster : MonoBehaviour
 	public float minPosition = -150.0f;
 	public float maxPosition = 150.0f;
 
+	//internal int spriteNumber = 0;
 	public Image monsterImage = null;
 	public Sprite[] sprites = new Sprite[2];
 
@@ -18,6 +19,18 @@ public class MainMonster : MonoBehaviour
 	void Start()
 	{
 		player = FindAnyObjectByType<Player>();
+		Animator animator = GetComponent<Animator>();
+		if (animator)
+		{
+			if (player.bonusPlayer)
+			{
+				animator.CrossFade("NYAN", 0);
+			}
+			else
+			{
+				animator.CrossFade("MainMonster", 0);
+			}
+		}
 	}
 
 	// Update is called once per frame

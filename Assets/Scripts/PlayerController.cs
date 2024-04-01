@@ -70,7 +70,14 @@ public class PlayerController : MonoBehaviour
 			if (timer <= 0)
 			{
 				rb.velocity = Vector3.right * player.speed / 8;
-				animator.CrossFade("PlayerRun", 0);
+				if (!player.bonusPlayer)
+				{
+					animator.CrossFade("PlayerRun", 0);
+				}
+				else
+				{
+					animator.CrossFade("BonusPlayerRun", 0);
+				}
 				playerHit = false;
 				timerOn = false;
 			}
@@ -102,8 +109,15 @@ public class PlayerController : MonoBehaviour
 			{
 				rb.velocity = new Vector3(player.speed / 8, 0);
 			}
-			
-			animator.CrossFade("PlayerRun", 0);
+
+			if (!player.bonusPlayer)
+			{
+				animator.CrossFade("PlayerRun", 0);
+			}
+			else
+			{
+				animator.CrossFade("BonusPlayerRun", 0);
+			}
 		}
 
 		if (collision.collider.CompareTag("Wall") && onGround)
@@ -141,7 +155,14 @@ public class PlayerController : MonoBehaviour
 		}
 		if (rb.velocity.y < 0 && !isJump && !onGround)
 		{
-			animator.CrossFade("Fall", 0);
+			if (!player.bonusPlayer)
+			{
+				animator.CrossFade("Fall", 0);
+			}
+			else
+			{
+				animator.CrossFade("BonusPlayerFall", 0);
+			}
 		}
 		if (collision.collider.CompareTag("Wall"))
 		{
@@ -154,7 +175,14 @@ public class PlayerController : MonoBehaviour
 		isJump = true;
 		if (animator)
 		{
-			animator.CrossFade("Jump", 0);
+			if (!player.bonusPlayer)
+			{
+				animator.CrossFade("Jump", 0);
+			}
+			else
+			{
+				animator.CrossFade("BonusPlayerJump", 0);
+			}
 		}
 		else
 		{
@@ -172,12 +200,26 @@ public class PlayerController : MonoBehaviour
 			switch (other.gameObject.GetComponent<Obstacle>().type)
 			{
 				case Obstacle.obstacleType.spike:
-					animator.CrossFade("PlayerHit", 0);
+					if (!player.bonusPlayer)
+					{
+						animator.CrossFade("PlayerHit", 0);
+					}
+					else
+					{
+						animator.CrossFade("BonusPlayerHit", 0);
+					}
 					player.health -= other.gameObject.GetComponent<Obstacle>().damage;
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
 					break;
 				case Obstacle.obstacleType.slime:
-					animator.CrossFade("SlowRun", 0);
+					if (!player.bonusPlayer)
+					{
+						animator.CrossFade("SlowRun", 0);
+					}
+					else
+					{
+						animator.CrossFade("BonusPlayerSlow", 0);
+					}
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
 					break;
 				default: break;

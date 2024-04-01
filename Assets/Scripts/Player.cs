@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -19,19 +20,25 @@ public class Player : MonoBehaviour
 	public int totalKeys = 0;
 	public Transform projectileSpawnPoint = null;
 	public GameObject projectilePrefab = null;
+	public bool bonusPlayer = false;
+	public bool treasurePurchased = false;
+	public bool treasureOpened = false;
 
 	public Sprite[] sprites = new Sprite[2];
 	public Image playerImage = null;
 
 	public HealthBar healthBar = null;
+	public MainMonster monster = null;
 
-	internal float score = 0;
+	public float score = 0;
+	public float maxScore = 0;
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		healthBar.SetMaxHealth(maxHealth);
 		LoadProgress();
+		score = 0;
 	}
 
 	// Update is called once per frame
@@ -41,10 +48,15 @@ public class Player : MonoBehaviour
 		{
 			totalCoins += coins;
 			totalKeys += keys;
+			if (score > maxScore)
+			{
+				maxScore = score;
+			}	
 			SaveProgress();
 			Destroy(gameObject);
 			// GOTO gameover screen
-			Quit();
+			SceneManager.LoadScene(0);
+			//Quit();
 		}	
 	}
 
@@ -57,10 +69,11 @@ public class Player : MonoBehaviour
 	{
 		GameData data = SaveSystem.LoadProgress();
 		if (data != null)
-		{
-			playerImage.sprite = sprites[data.playerSprite];
-			totalCoins += data.coins;
-			totalKeys += data.keys;
+		{			
+			totalCoins = coins + data.coins;
+			totalKeys = keys + data.keys;
+			bonusPlayer = data.bonusPlayer;
+			maxScore = data.highScore;
 		}
 	}
 

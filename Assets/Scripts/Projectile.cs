@@ -71,7 +71,14 @@ public class Projectile : MonoBehaviour
 			player.healthBar.SetHealth(player.health);
 			if (player)
 			{
-				PlayerController.instance.animator.CrossFade("PlayerHit", 0);
+				if (!player.bonusPlayer)
+				{
+					PlayerController.instance.animator.CrossFade("PlayerHit", 0);
+				}
+				else
+				{
+					PlayerController.instance.animator.CrossFade("BonusPlayerHit", 0);
+				}
 			}
 			Destroy(gameObject);
 		}
