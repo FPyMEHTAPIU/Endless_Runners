@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ public class MainMonster : MonoBehaviour
 	void Start()
 	{
 		player = FindAnyObjectByType<Player>();
+		LoadProgress();
 		Animator animator = GetComponent<Animator>();
 		if (animator)
 		{
@@ -36,7 +38,7 @@ public class MainMonster : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (player.GetComponent<Rigidbody>().velocity.x == 50 && monsterPosition > minPosition)
+		if (player.GetComponent<Rigidbody>().velocity.x == player.speed / 8 && monsterPosition > minPosition)
 		{
 			monsterPosition -= 50.0f * Time.deltaTime;
 		}
@@ -48,5 +50,24 @@ public class MainMonster : MonoBehaviour
 		}
 		// Set moster as upper layer than blocks
 		transform.SetSiblingIndex(9);
+	}
+
+	public void LoadProgress()
+	{
+		GameData data = SaveSystem.LoadProgress();
+		if (data != null)
+		{
+			player.bonusPlayer = data.bonusPlayer;
+			/*if (player.bonusPlayer)
+			{
+				player.playerImage.sprite = player.sprites[1];
+				monsterImage.sprite = sprites[1];
+			}
+			else
+			{
+				player.playerImage.sprite = player.sprites[0];
+				monsterImage.sprite = sprites[0];
+			}*/
+		}
 	}
 }

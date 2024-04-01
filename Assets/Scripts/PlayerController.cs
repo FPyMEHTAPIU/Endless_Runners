@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
 	public bool timerOn = false;
 	public bool canShoot = true;
 	public bool playerHit = false;
+	public float speedThreshold = 500;
 
 	[Range(0f, 1000.0f)]
 	public float jumpForce = 250.0f;
@@ -95,6 +96,12 @@ public class PlayerController : MonoBehaviour
 			{
 				canShoot = true;
 			}
+		}
+		// increase speed every 500 puints to max speed
+		if (player.score > speedThreshold && player.speed < player.maxSpeed)
+		{
+			player.speed += 25;
+			speedThreshold += 500;
 		}
 	}
 

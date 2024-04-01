@@ -35,7 +35,7 @@ public class Projectile : MonoBehaviour
 		else
 		{
 			speed = -750.0f;
-			damage = 25;
+			damage = 50;
 			projectileImage.sprite = sprites[1];
 
 			if (animator)

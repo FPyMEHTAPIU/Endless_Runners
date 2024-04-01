@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameData
 {
 	public int coins;
+	public float score;
 	public float highScore;
 	public int keys;
 
@@ -16,6 +17,7 @@ public class GameData
 	public GameData(Player player)
 	{
 		coins = player.totalCoins;
+		score = player.score;
 		highScore = player.maxScore;
 		keys = player.totalKeys;
 		treasurePurchased = player.treasurePurchased;

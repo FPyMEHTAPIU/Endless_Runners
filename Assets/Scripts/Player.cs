@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 	public int health = 100;
 	public int maxHealth = 100;
 	public float speed = 400.0f;
+	public float maxSpeed = 600.0f;
 
 	public int coins = 0;
 	public int keys = 0;
@@ -55,8 +56,7 @@ public class Player : MonoBehaviour
 			SaveProgress();
 			Destroy(gameObject);
 			// GOTO gameover screen
-			SceneManager.LoadScene(0);
-			//Quit();
+			SceneManager.LoadScene(2);
 		}	
 	}
 

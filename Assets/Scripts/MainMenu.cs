@@ -36,6 +36,7 @@ public class MainMenu : MonoBehaviour
 			coins = data.coins;
 			keys = data.keys;
 			score = data.highScore;
+			player.bonusPlayer = data.bonusPlayer;
 			coinsValue.text = coins.ToString();
 			keysValue.text = keys.ToString();
 			highScore.text = score.ToString("F0");
@@ -51,7 +52,8 @@ public class MainMenu : MonoBehaviour
 			shop.SetActive(false);
 			treasure.SetActive(true);
 		}
-		else
+		
+		if (player.bonusPlayer)
 		{
 			shop.SetActive(false);
 			treasure.SetActive(false);
