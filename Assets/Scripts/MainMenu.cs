@@ -27,9 +27,17 @@ public class MainMenu : MonoBehaviour
 
 	private GameData data;
 
+	public AudioSource intro = null;
+	public AudioSource loop = null;
+	public AudioSource buyTreasureSound = null;
+	public AudioSource openTreasureSound = null;
+	public AudioSource buttonClickSound = null;
+
 	// Start is called before the first frame update
 	void Start()
 	{
+		intro.Play();
+		loop.PlayDelayed(intro.clip.length);
 		data = SaveSystem.LoadProgress();
 		if (data != null)
 		{
@@ -78,6 +86,7 @@ public class MainMenu : MonoBehaviour
 
 	public void PlayGame()
 	{
+		buttonClickSound.Play();
 		SceneManager.LoadScene(1);
 	}
 
@@ -85,6 +94,8 @@ public class MainMenu : MonoBehaviour
 	{
 		if (shop && coins >= 20)
 		{
+			buttonClickSound.Play();
+			buyTreasureSound.PlayDelayed(buttonClickSound.clip.length);
 			coins -= 20;
 			coinsValue.text = coins.ToString();
 			player.treasurePurchased = true;
@@ -98,6 +109,8 @@ public class MainMenu : MonoBehaviour
 	{
 		if (treasure && keys >= 2)
 		{
+			buttonClickSound.Play();
+			openTreasureSound.PlayDelayed(buttonClickSound.clip.length);
 			Animator animator = treasure.GetComponent<Animator>();
 			if (animator)
 			{
@@ -121,6 +134,7 @@ public class MainMenu : MonoBehaviour
 
 	public void CloseScreen()
 	{
+		buttonClickSound.Play();
 		bonusScreen.SetActive(false);
 	}
 
@@ -134,6 +148,7 @@ public class MainMenu : MonoBehaviour
 
 	public void ResetProgress()
 	{
+		buttonClickSound.Play();
 		player.totalCoins = coins = 0;
 		player.totalKeys = keys = 0;
 		player.maxScore = data.highScore = score = 0;
@@ -151,8 +166,9 @@ public class MainMenu : MonoBehaviour
 
 	public void Quit()
 	{
+		buttonClickSound.Play();
 		#if UNITY_EDITOR
-		EditorApplication.isPlaying = false;
+			EditorApplication.isPlaying = false;
 		#else
 			Application.Quit();
 		#endif

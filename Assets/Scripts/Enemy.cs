@@ -19,6 +19,9 @@ public class Enemy : MonoBehaviour
 	public float speedDecrement = 50.0f;
 	public HealthBar healthBar = null;
 
+	public AudioSource shootSound = null;
+	public AudioSource attackSound = null;
+
 	private Player player = null;
 	private float attackTimer = 0.0f;
 	private bool canAttack = true;
@@ -81,6 +84,7 @@ public class Enemy : MonoBehaviour
 			arrow.GetComponent<Projectile>().fromPlayer = false;
 			Instantiate(arrow, projectileSpawnPoint.position, Quaternion.identity,
 					GameObject.FindAnyObjectByType<Canvas>().transform);
+			shootSound.Play();
 		}
 		canAttack = false;
 	}
@@ -91,6 +95,7 @@ public class Enemy : MonoBehaviour
 		if (animator)
 		{
 			animator.CrossFade("PlantAttack", 0);
+			attackSound.Play();
 		}
 		canAttack = false;
 	}
@@ -108,6 +113,7 @@ public class Enemy : MonoBehaviour
 
 			if (PlayerController.instance.animator)
 			{
+				PlayerController.instance.playerHitSound.Play();
 				if (!player.bonusPlayer)
 				{
 					PlayerController.instance.animator.CrossFade("PlayerHit", 0);

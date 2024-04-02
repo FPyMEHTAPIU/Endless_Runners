@@ -33,6 +33,12 @@ public class PlayerController : MonoBehaviour
 	internal Animator animator = null;
 	private int collisionCount = 0;
 
+	public AudioSource jumpSound = null;
+	public AudioSource shootSound = null;
+	public AudioSource spikesHit = null;
+	public AudioSource slimeTrap = null;
+	public AudioSource playerHitSound = null;
+
 	private void Awake()
 	{
 		instance = this;
@@ -146,6 +152,7 @@ public class PlayerController : MonoBehaviour
 		if (collision.collider.CompareTag("Monster"))
 		{
 			player.health = 0;
+			playerHitSound.Play();
 		}
 	}
 
@@ -192,6 +199,7 @@ public class PlayerController : MonoBehaviour
 		isJump = true;
 		if (animator)
 		{
+			jumpSound.Play();
 			if (!player.bonusPlayer)
 			{
 				animator.CrossFade("Jump", 0);
@@ -217,6 +225,7 @@ public class PlayerController : MonoBehaviour
 			switch (other.gameObject.GetComponent<Obstacle>().type)
 			{
 				case Obstacle.obstacleType.spike:
+					spikesHit.Play();
 					if (!player.bonusPlayer)
 					{
 						animator.CrossFade("PlayerHit", 0);
@@ -229,6 +238,7 @@ public class PlayerController : MonoBehaviour
 					rb.velocity -= Vector3.right * other.gameObject.GetComponent<Obstacle>().speedDecrement;
 					break;
 				case Obstacle.obstacleType.slime:
+					slimeTrap.Play();
 					if (!player.bonusPlayer)
 					{
 						animator.CrossFade("SlowRun", 0);
@@ -255,6 +265,7 @@ public class PlayerController : MonoBehaviour
 			arrow.GetComponent<Projectile>().fromPlayer = true;
 			Instantiate(arrow, player.projectileSpawnPoint.position, Quaternion.identity,
 					GameObject.FindAnyObjectByType<Canvas>().transform);
+			shootSound.Play();
 		}
 		canShoot = false;
 	}

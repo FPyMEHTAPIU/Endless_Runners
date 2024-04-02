@@ -9,8 +9,7 @@ public class Projectile : MonoBehaviour
 	public float speed = 1000;
 	public bool fromPlayer = true;
 
-	public AudioSource shootSound = null;
-	public AudioSource hitSound = null;
+	public AudioSource EnemyHitSound = null;
 
 	public Sprite[] sprites = new Sprite[2];
 	public Image projectileImage = null;
@@ -66,11 +65,11 @@ public class Projectile : MonoBehaviour
 
 		if (collision.collider.CompareTag("Player") && !fromPlayer)
 		{
-			/*collision.gameObject.GetComponent<Player>()*/
 			player.health -= damage;
 			player.healthBar.SetHealth(player.health);
 			if (player)
 			{
+				PlayerController.instance.playerHitSound.Play();
 				if (!player.bonusPlayer)
 				{
 					PlayerController.instance.animator.CrossFade("PlayerHit", 0);
@@ -85,6 +84,7 @@ public class Projectile : MonoBehaviour
 
 		if(collision.collider.CompareTag("Enemy") && fromPlayer)
 		{
+			EnemyHitSound.Play();
 			collision.gameObject.GetComponent<Enemy>().health -= damage;
 			collision.gameObject.GetComponent<Enemy>().healthBar.
 				SetEnemyHealth(collision.gameObject.GetComponent<Enemy>().health);

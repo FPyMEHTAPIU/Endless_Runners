@@ -28,10 +28,26 @@ public class GameController : MonoBehaviour
 
 	private Player player;
 
+	public AudioSource intro = null;
+	public AudioSource loop = null;
+	public AudioSource buttonClickSound = null;
+	public AudioClip[] clips = new AudioClip[2];
+
 	// Start is called before the first frame update
 	void Start()
 	{
 		player = FindAnyObjectByType<Player>();
+		if (!player.bonusPlayer)
+		{
+			intro.Play();
+			loop.clip = clips[0];
+			loop.PlayDelayed(intro.clip.length);
+		}
+		else
+		{
+			loop.clip = clips[1];
+			loop.Play();
+		}
 		pauseScreen.SetActive(false);
 		warningScreen.SetActive(false);
 	}
@@ -124,13 +140,14 @@ public class GameController : MonoBehaviour
 	{
 		if (isPaused)
 		{
+			buttonClickSound.Play();
 			isPaused = false;
 			Time.timeScale = isPaused ? 0 : 1;
 			pauseScreen.SetActive(false);
 		}
 	}
 
-	public void MainMenu()
+	public void OpenMainMenu()
 	{
 		if (isPaused)
 		{
@@ -140,6 +157,7 @@ public class GameController : MonoBehaviour
 
 	public void Yes()
 	{
+		buttonClickSound.Play();
 		isPaused = false;
 		Time.timeScale = isPaused ? 0 : 1;
 		pauseScreen.SetActive(false);
@@ -148,6 +166,7 @@ public class GameController : MonoBehaviour
 
 	public void No()
 	{
+		buttonClickSound.Play();
 		warningScreen.SetActive(false);
 		pauseScreen.SetActive(true);
 	}	

@@ -11,6 +11,8 @@ public class GameOver : MonoBehaviour
 	public Text score;
 	public Text maxScore;
 
+	public AudioSource buttonClickSound = null;
+
 	private GameData data;
 	// Start is called before the first frame update
 	void Start()
@@ -27,11 +29,13 @@ public class GameOver : MonoBehaviour
 
 	public void Restart()
 	{
+		buttonClickSound.Play();
 		SceneManager.LoadScene(2);
 	}
 
 	public void Menu()
 	{
+		buttonClickSound.Play();
 		SceneManager.LoadScene(0);
 	}
 }

@@ -5,8 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class Tutorial : MonoBehaviour
 {
-    public void PlayGame()
-    {
-        SceneManager.LoadScene(2);
-    }
+	public AudioSource buttonClickSound = null;
+
+	public void PlayGame()
+	{
+		buttonClickSound.Play();
+		SceneManager.LoadScene(2);
+	}
 }
