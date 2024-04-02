@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 	public bool canShoot = true;
 	public bool playerHit = false;
 	public float speedThreshold = 500;
+	public float projectileSpeedMultiplier = 1;
 
 	[Range(0f, 1000.0f)]
 	public float jumpForce = 250.0f;
@@ -84,7 +85,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		if (Input.GetButtonDown("Fire1") && canShoot)
+		if (Input.GetButtonDown("Fire1") && canShoot && !GameController.instance.isPaused)
 		{
 			Shoot();
 		}
@@ -102,7 +103,16 @@ public class PlayerController : MonoBehaviour
 		{
 			player.speed += 25;
 			speedThreshold += 500;
+			projectileSpeedMultiplier += 0.0625f;
 		}
+
+		// DANGER ZONE
+		//if (Input.GetButtonDown("Fire3"))
+		//{
+		//	player.coins += 20;
+		//	player.keys += 2;
+		//}	
+		// DANGER ZONE
 	}
 
 	private void OnCollisionEnter(Collision collision)

@@ -25,15 +25,9 @@ public class GameOver : MonoBehaviour
 		}
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-		
-	}
-
 	public void Restart()
 	{
-		SceneManager.LoadScene(1);
+		SceneManager.LoadScene(2);
 	}
 
 	public void Menu()

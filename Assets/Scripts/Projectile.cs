@@ -34,7 +34,7 @@ public class Projectile : MonoBehaviour
 		}
 		else
 		{
-			speed = -750.0f;
+			speed = -750.0f * PlayerController.instance.projectileSpeedMultiplier;
 			damage = 50;
 			projectileImage.sprite = sprites[1];
 

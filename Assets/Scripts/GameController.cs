@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -16,16 +17,43 @@ public class GameController : MonoBehaviour
 	public GameObject blockPrefab = null;
 	public Canvas canvas = null;
 
+	public GameObject pauseScreen =	null;
+	public GameObject warningScreen = null;
+	public Text pauseCoins = null;
+	public Text pauseKeys = null;
+	public Text pauseScore = null;
+	public Text pauseBestScore = null;
+
+	public bool isPaused = false;
+
+	private Player player;
+
 	// Start is called before the first frame update
 	void Start()
 	{
-		
+		player = FindAnyObjectByType<Player>();
+		pauseScreen.SetActive(false);
+		warningScreen.SetActive(false);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		
+		if (Input.GetButtonDown("Cancel"))
+		{
+			isPaused = !isPaused;
+			Time.timeScale = isPaused ? 0 : 1;
+			pauseScreen.SetActive(isPaused);
+
+			if (isPaused)
+			{
+				pauseCoins.text = player.coins.ToString();
+				pauseKeys.text = player.keys.ToString();
+				pauseScore.text = player.score.ToString("F0");
+				pauseBestScore.text = player.maxScore.ToString("F0");
+			}
+		}
+		pauseScreen.transform.SetSiblingIndex(10);
 	}
 
 	private void Awake()
@@ -91,4 +119,36 @@ public class GameController : MonoBehaviour
 		Instantiate(backgroundImage, new Vector3(other.transform.position.x + 1675, 0, 0), Quaternion.identity,
 					GameObject.FindGameObjectWithTag("Background").transform);
 	}
+
+	public void ContinuePlay()
+	{
+		if (isPaused)
+		{
+			isPaused = false;
+			Time.timeScale = isPaused ? 0 : 1;
+			pauseScreen.SetActive(false);
+		}
+	}
+
+	public void MainMenu()
+	{
+		if (isPaused)
+		{
+			warningScreen.SetActive(true);
+		}
+	}
+
+	public void Yes()
+	{
+		isPaused = false;
+		Time.timeScale = isPaused ? 0 : 1;
+		pauseScreen.SetActive(false);
+		SceneManager.LoadScene(0);
+	}
+
+	public void No()
+	{
+		warningScreen.SetActive(false);
+		pauseScreen.SetActive(true);
+	}	
 }

@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
 			SaveProgress();
 			Destroy(gameObject);
 			// GOTO gameover screen
-			SceneManager.LoadScene(2);
+			SceneManager.LoadScene(3);
 		}	
 	}
 

@@ -45,12 +45,28 @@ public class MainMenu : MonoBehaviour
 		if (!player.treasurePurchased)
 		{
 			shop.SetActive(true);
+			if (coins >= 20)
+			{
+				shop.GetComponentInChildren<Button>().interactable = true;
+			}
+			else
+			{
+				shop.GetComponentInChildren<Button>().interactable = false;
+			}	
 			treasure.SetActive(false);
 		}
 		else if (player.treasurePurchased && !player.treasureOpened)
 		{
 			shop.SetActive(false);
 			treasure.SetActive(true);
+			if (keys >= 2)
+			{
+				treasure.GetComponentInChildren<Button>().interactable = true;
+			}
+			else
+			{
+				treasure.GetComponentInChildren<Button>().interactable = false;
+			}
 		}
 		
 		if (player.bonusPlayer)
@@ -58,12 +74,6 @@ public class MainMenu : MonoBehaviour
 			shop.SetActive(false);
 			treasure.SetActive(false);
 		}
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
 	}
 
 	public void PlayGame()
@@ -95,7 +105,6 @@ public class MainMenu : MonoBehaviour
 			}	
 			keys -= 2;
 			keysValue.text = keys.ToString();
-			treasure.SetActive(false);
 			player.treasureOpened = true;
 			player.bonusPlayer = true;
 			SaveProgress();
@@ -106,6 +115,7 @@ public class MainMenu : MonoBehaviour
 	private IEnumerator OpenChest()
 	{
 		yield return new WaitForSeconds(1f);
+		treasure.SetActive(false);
 		bonusScreen.SetActive(true);
 	}
 
@@ -131,6 +141,7 @@ public class MainMenu : MonoBehaviour
 		keysValue.text = keys.ToString();
 		highScore.text = data.highScore.ToString("F0");
 		shop.SetActive(true);
+		shop.GetComponentInChildren<Button>().interactable = false;
 		treasure.SetActive(false);
 		player.treasurePurchased = false;
 		player.treasureOpened = false;
