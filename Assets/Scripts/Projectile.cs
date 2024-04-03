@@ -91,11 +91,6 @@ public class Projectile : MonoBehaviour
 			{
 				StartCoroutine(EnemyHit(collision));
 			}
-			/*EnemyHitSound.Play();
-			collision.gameObject.GetComponent<Enemy>().health -= damage;
-			collision.gameObject.GetComponent<Enemy>().healthBar.
-				SetEnemyHealth(collision.gameObject.GetComponent<Enemy>().health);
-			Destroy(gameObject);*/
 		}
 	}
 

@@ -18,18 +18,6 @@ public class ImageChanger : MonoBehaviour
 	public Image bottomLeftBox = null;
 	public bool isLastBlock = true;
 
-	// Start is called before the first frame update
-	void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 	internal void ChangeRightBox(bool sameLines, bool lastBlock)
 	{
 		isLastBlock = lastBlock;

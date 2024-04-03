@@ -56,7 +56,6 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		//Debug.LogWarning(player.transform.position);
 		if (onGround && !timerOn)
 		{
 			rb.velocity = new Vector3(player.speed / 8, 0);
@@ -111,14 +110,6 @@ public class PlayerController : MonoBehaviour
 			speedThreshold += 500;
 			projectileSpeedMultiplier += 0.0625f;
 		}
-
-		// DANGER ZONE
-		//if (Input.GetButtonDown("Fire3"))
-		//{
-		//	player.coins += 20;
-		//	player.keys += 2;
-		//}	
-		// DANGER ZONE
 	}
 
 	private void OnCollisionEnter(Collision collision)

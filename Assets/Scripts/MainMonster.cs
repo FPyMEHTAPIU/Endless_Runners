@@ -13,7 +13,6 @@ public class MainMonster : MonoBehaviour
 	public float maxPosition = 150.0f;
 	public bool soundOn = false;
 
-	//internal int spriteNumber = 0;
 	public Image monsterImage = null;
 	public Sprite[] sprites = new Sprite[2];
 	public AudioSource beeSound = null;
@@ -80,16 +79,6 @@ public class MainMonster : MonoBehaviour
 		if (data != null)
 		{
 			player.bonusPlayer = data.bonusPlayer;
-			/*if (player.bonusPlayer)
-			{
-				player.playerImage.sprite = player.sprites[1];
-				monsterImage.sprite = sprites[1];
-			}
-			else
-			{
-				player.playerImage.sprite = player.sprites[0];
-				monsterImage.sprite = sprites[0];
-			}*/
 		}
 	}
 }
