@@ -32,9 +32,14 @@ public class GameController : MonoBehaviour
 	public AudioSource loop = null;
 	public AudioSource buttonClickSound = null;
 	public AudioSource nyan = null;
+	/*public Sprite[] soundSprites = new Sprite[2];
+	public GameObject soundButton = null;
+	private bool soundOff = false;*/
+
 	// Start is called before the first frame update
 	void Start()
 	{
+		Cursor.visible = false;
 		GameData data = SaveSystem.LoadProgress();
 		player = FindAnyObjectByType<Player>();
 		player.bonusPlayer = data.bonusPlayer;
@@ -64,6 +69,7 @@ public class GameController : MonoBehaviour
 			
 			if (isPaused)
 			{
+				Cursor.visible = true;
 				AudioListener.pause = true;
 				
 				pauseCoins.text = player.coins.ToString();
@@ -73,6 +79,7 @@ public class GameController : MonoBehaviour
 			}
 			else
 			{
+				Cursor.visible = false;
 				AudioListener.pause = false;
 			}
 		}
@@ -153,6 +160,7 @@ public class GameController : MonoBehaviour
 			Time.timeScale = isPaused ? 0 : 1;
 			pauseScreen.SetActive(false);
 			AudioListener.pause = false;
+			Cursor.visible = false;
 		}
 	}
 
@@ -181,4 +189,22 @@ public class GameController : MonoBehaviour
 		warningScreen.SetActive(false);
 		pauseScreen.SetActive(true);
 	}
+
+	/*public void TurnSound()
+	{
+		soundOff = !soundOff;
+		if (soundOff)
+		{
+			buttonClickSound.Play();
+			AudioListener.pause = true;
+			buttonClickSound.ignoreListenerPause = false;
+			soundButton.GetComponent<Image>().sprite = soundSprites[1];
+		}
+		else
+		{
+			AudioListener.pause = false;
+			buttonClickSound.ignoreListenerPause = true;
+			soundButton.GetComponent<Image>().sprite = soundSprites[0];
+		}
+	}*/
 }

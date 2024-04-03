@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
 			}	
 			SaveProgress();
 			Destroy(gameObject);
+			Cursor.visible = true;
 			// GOTO gameover screen
 			SceneManager.LoadScene(3);
 		}	

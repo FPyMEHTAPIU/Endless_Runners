@@ -25,6 +25,8 @@ public class MainMenu : MonoBehaviour
 	public GameObject treasure = null;
 	public GameObject bonusScreen = null;
 	public GameObject warningScreen = null;
+	/*public GameObject soundButton = null;
+	public Sprite[] soundSprites = new Sprite[2];*/
 
 	private GameData data;
 
@@ -33,6 +35,8 @@ public class MainMenu : MonoBehaviour
 	public AudioSource buyTreasureSound = null;
 	public AudioSource openTreasureSound = null;
 	public AudioSource buttonClickSound = null;
+
+	//private bool soundOff = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -180,14 +184,34 @@ public class MainMenu : MonoBehaviour
 
 	public void Yes()
 	{
+		buttonClickSound.Play();
 		ResetProgress();
 		warningScreen.SetActive(false);
 	}
 
 	public void No()
 	{
+		buttonClickSound.Play();
 		warningScreen.SetActive(false);
 	}
+
+	/*public void TurnSound()
+	{
+		soundOff = !soundOff;
+		if (soundOff)
+		{
+			buttonClickSound.Play();
+			AudioListener.pause = true;
+			buttonClickSound.ignoreListenerPause = false;
+			soundButton.GetComponent<Image>().sprite = soundSprites[1];
+		}
+		else
+		{
+			AudioListener.pause = false;
+			buttonClickSound.ignoreListenerPause = true;
+			soundButton.GetComponent<Image>().sprite = soundSprites[0];
+		}
+	}*/
 
 	public void Quit()
 	{
