@@ -7,6 +7,7 @@ public class Item : MonoBehaviour
 {
 	public int value = 1;
 	public bool isFlask = false;
+	private bool isTaken = false;
 
 	public UIHandler uiVar;
 
@@ -51,12 +52,14 @@ public class Item : MonoBehaviour
 				default: break;
 			}
 		}
+		isTaken = false;
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (collision.collider.CompareTag("Player"))
+		if (collision.collider.CompareTag("Player") && !isTaken)
 		{
+			isTaken = true;
 			if (isFlask)
 			{
 				player.health += value;

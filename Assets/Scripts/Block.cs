@@ -16,11 +16,19 @@ public class Block : MonoBehaviour
 	public Obstacle obstaclePrefab = null;
 	public GameObject enemyPrefab = null;
 
-	public int maxObstacleCount = 3; 
-	
+	public int maxObstacleCount = 3;
+
 	void Start()
 	{
 		creatingTrigger.isTrigger = true;
+	}
+
+	private void Update()
+	{
+		if (transform.position.x <= -3800)
+		{
+			Destroy(gameObject);
+		}
 	}
 
 	internal int GenerateBlock()

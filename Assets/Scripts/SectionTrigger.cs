@@ -56,16 +56,9 @@ public class SectionTrigger : MonoBehaviour
 		}
 		// Delete old blocks
 		else if (other.gameObject.CompareTag("DeleteTrigger") && 
-			(this.CompareTag("Block") || this.CompareTag("Midground")))
+			this.CompareTag("Midground"))
 		{
-			if (this.CompareTag("Block"))
-			{
-				Destroy(block);
-			}
-			else if (this.CompareTag("Midground"))
-			{
-				Destroy(backgroundImage);
-			}
+			Destroy(backgroundImage);
 		}
 	}
 }
