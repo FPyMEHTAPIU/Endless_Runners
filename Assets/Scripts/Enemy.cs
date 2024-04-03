@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
 	private float attackTimer = 0.0f;
 	private bool canAttack = true;
 	private Animator animator;
+	private bool attacked = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -38,6 +39,7 @@ public class Enemy : MonoBehaviour
 			health = 50;
 			if (animator)
 				animator.CrossFade("PlantIdle", 0);
+			attacked = false;
 		}
 		else
 		{
@@ -53,7 +55,9 @@ public class Enemy : MonoBehaviour
 	void Update()
 	{
 		if (Mathf.Abs(transform.position.y - player.transform.position.y) <= 25 && 
-					transform.position.x - player.transform.position.x > 0 && !isMelee && canAttack)
+					transform.position.x - player.transform.position.x > 0 &&
+					transform.position.x - player.transform.position.x < 1500 &&
+					!isMelee && canAttack)
 		{
 			Shoot();
 		}
@@ -92,10 +96,11 @@ public class Enemy : MonoBehaviour
 	private void Attack()
 	{
 		attackTimer = 2.0f;
-		if (animator)
+		if (animator && !attacked)
 		{
 			animator.CrossFade("PlantAttack", 0);
 			attackSound.Play();
+			attacked = true;
 		}
 		canAttack = false;
 	}

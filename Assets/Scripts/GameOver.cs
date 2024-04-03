@@ -12,11 +12,13 @@ public class GameOver : MonoBehaviour
 	public Text maxScore;
 
 	public AudioSource buttonClickSound = null;
+	public AudioSource gameOverSound = null;
 
 	private GameData data;
 	// Start is called before the first frame update
 	void Start()
 	{
+		gameOverSound.Play();
 		data = SaveSystem.LoadProgress();
 		if (data != null)
 		{

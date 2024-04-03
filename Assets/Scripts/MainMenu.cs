@@ -102,6 +102,14 @@ public class MainMenu : MonoBehaviour
 			SaveProgress();
 			shop.SetActive(false);
 			treasure.SetActive(true);
+			if (keys >= 2)
+			{
+				treasure.GetComponentInChildren<Button>().interactable = true;
+			}
+			else
+			{
+				treasure.GetComponentInChildren<Button>().interactable = false;
+			}
 		}
 	}
 

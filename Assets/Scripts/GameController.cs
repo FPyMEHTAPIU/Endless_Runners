@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour
 		else
 		{
 			loop.clip = clips[1];
+			loop.volume = 0.15f;
 			loop.Play();
 		}
 		pauseScreen.SetActive(false);
@@ -60,16 +61,21 @@ public class GameController : MonoBehaviour
 			isPaused = !isPaused;
 			Time.timeScale = isPaused ? 0 : 1;
 			pauseScreen.SetActive(isPaused);
-
+			
 			if (isPaused)
 			{
+				loop.Pause();
 				pauseCoins.text = player.coins.ToString();
 				pauseKeys.text = player.keys.ToString();
 				pauseScore.text = player.score.ToString("F0");
 				pauseBestScore.text = player.maxScore.ToString("F0");
 			}
+			else
+			{
+				loop.UnPause();
+			}
 		}
-		pauseScreen.transform.SetSiblingIndex(10);
+		pauseScreen.transform.SetSiblingIndex(15);
 	}
 
 	private void Awake()
@@ -144,6 +150,7 @@ public class GameController : MonoBehaviour
 			isPaused = false;
 			Time.timeScale = isPaused ? 0 : 1;
 			pauseScreen.SetActive(false);
+			loop.UnPause();
 		}
 	}
 

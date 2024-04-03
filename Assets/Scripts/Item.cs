@@ -9,6 +9,9 @@ public class Item : MonoBehaviour
 	public bool isFlask = false;
 
 	public UIHandler uiVar;
+
+	public AudioSource heal = null;
+	public AudioSource coinKey = null;
 	public enum itemType
 	{
 		healthFlask,
@@ -48,7 +51,6 @@ public class Item : MonoBehaviour
 				default: break;
 			}
 		}
-		
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -77,7 +79,24 @@ public class Item : MonoBehaviour
 					uiVar.SetKeyText(player.keys);
 				}
 			}
-			Destroy(gameObject);
+			StartCoroutine(PlaySound());
 		}
+	}
+
+	private IEnumerator PlaySound()
+	{
+		if (isFlask)
+		{
+			heal.Play();
+			gameObject.GetComponentInChildren<Image>().enabled = false;
+			yield return new WaitForSeconds(heal.clip.length);
+		}
+		else
+		{
+			coinKey.Play();
+			gameObject.GetComponentInChildren<Image>().enabled = false;
+			yield return new WaitForSeconds(coinKey.clip.length);
+		}
+		Destroy(gameObject);
 	}
 }

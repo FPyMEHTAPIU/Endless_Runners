@@ -43,7 +43,7 @@ public class MainMonster : MonoBehaviour
 		if (player.GetComponent<Rigidbody>().velocity.x == player.speed / 8 && monsterPosition > minPosition)
 		{
 			monsterPosition -= 50.0f * Time.deltaTime;
-			if (soundOn && monsterPosition <= 0 && !player.bonusPlayer)
+			if (soundOn && monsterPosition <= minPosition && !player.bonusPlayer)
 			{
 				beeSound.Stop();
 				soundOn = false;
@@ -54,7 +54,7 @@ public class MainMonster : MonoBehaviour
 			&& monsterPosition < maxPosition)
 		{
 			monsterPosition += 300.0f * Time.deltaTime;
-			if (!soundOn && monsterPosition >= 0 && !player.bonusPlayer)
+			if (!soundOn && monsterPosition >= minPosition && !player.bonusPlayer)
 			{
 				beeSound.Play();
 				soundOn = true;
