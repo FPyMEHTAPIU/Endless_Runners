@@ -24,6 +24,7 @@ public class MainMenu : MonoBehaviour
 	public GameObject shop = null;
 	public GameObject treasure = null;
 	public GameObject bonusScreen = null;
+	public GameObject warningScreen = null;
 
 	private GameData data;
 
@@ -95,7 +96,7 @@ public class MainMenu : MonoBehaviour
 		if (shop && coins >= 20)
 		{
 			buttonClickSound.Play();
-			buyTreasureSound.PlayDelayed(buttonClickSound.clip.length);
+			buyTreasureSound.Play();
 			coins -= 20;
 			coinsValue.text = coins.ToString();
 			player.treasurePurchased = true;
@@ -118,7 +119,7 @@ public class MainMenu : MonoBehaviour
 		if (treasure && keys >= 2)
 		{
 			buttonClickSound.Play();
-			openTreasureSound.PlayDelayed(buttonClickSound.clip.length);
+			openTreasureSound.Play();
 			Animator animator = treasure.GetComponent<Animator>();
 			if (animator)
 			{
@@ -154,6 +155,11 @@ public class MainMenu : MonoBehaviour
 		SaveSystem.SaveProgress(player);
 	}
 
+	public void OpenWarningScreen()
+	{
+		warningScreen.SetActive(true);
+	}
+
 	public void ResetProgress()
 	{
 		buttonClickSound.Play();
@@ -170,6 +176,17 @@ public class MainMenu : MonoBehaviour
 		player.treasureOpened = false;
 		player.bonusPlayer = false;
 		SaveSystem.SaveProgress(player);
+	}
+
+	public void Yes()
+	{
+		ResetProgress();
+		warningScreen.SetActive(false);
+	}
+
+	public void No()
+	{
+		warningScreen.SetActive(false);
 	}
 
 	public void Quit()

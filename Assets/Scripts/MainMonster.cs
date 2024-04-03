@@ -17,6 +17,7 @@ public class MainMonster : MonoBehaviour
 	public Image monsterImage = null;
 	public Sprite[] sprites = new Sprite[2];
 	public AudioSource beeSound = null;
+	internal static bool isPaused = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -59,7 +60,15 @@ public class MainMonster : MonoBehaviour
 				beeSound.Play();
 				soundOn = true;
 			}
+		}
 
+		if (isPaused)
+		{
+			beeSound.Pause();
+		}
+		else
+		{
+			beeSound.UnPause();
 		}
 		// Set moster as upper layer than blocks
 		transform.SetSiblingIndex(9);

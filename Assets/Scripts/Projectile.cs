@@ -16,6 +16,7 @@ public class Projectile : MonoBehaviour
 
 	private Animator animator;
 	private Player player;
+	private bool isHit = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -39,6 +40,8 @@ public class Projectile : MonoBehaviour
 
 			if (animator)
 				animator.CrossFade("GreenBullet", 0);
+
+			isHit = false;
 		}
 	}
 
@@ -84,11 +87,27 @@ public class Projectile : MonoBehaviour
 
 		if(collision.collider.CompareTag("Enemy") && fromPlayer)
 		{
-			EnemyHitSound.Play();
+			if (!isHit)
+			{
+				StartCoroutine(EnemyHit(collision));
+			}
+			/*EnemyHitSound.Play();
 			collision.gameObject.GetComponent<Enemy>().health -= damage;
 			collision.gameObject.GetComponent<Enemy>().healthBar.
 				SetEnemyHealth(collision.gameObject.GetComponent<Enemy>().health);
-			Destroy(gameObject);
+			Destroy(gameObject);*/
 		}
+	}
+
+	private IEnumerator EnemyHit(Collision collision)
+	{
+		isHit = true;
+		EnemyHitSound.Play();
+		gameObject.GetComponentInChildren<Image>().enabled = false;
+		collision.gameObject.GetComponent<Enemy>().health -= damage;
+		collision.gameObject.GetComponent<Enemy>().healthBar.
+			SetEnemyHealth(collision.gameObject.GetComponent<Enemy>().health);
+		yield return new WaitForSeconds(EnemyHitSound.clip.length);
+		Destroy(gameObject);
 	}
 }

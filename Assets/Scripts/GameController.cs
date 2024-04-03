@@ -31,26 +31,25 @@ public class GameController : MonoBehaviour
 	public AudioSource intro = null;
 	public AudioSource loop = null;
 	public AudioSource buttonClickSound = null;
-	public AudioClip[] clips = new AudioClip[2];
-
+	public AudioSource nyan = null;
 	// Start is called before the first frame update
 	void Start()
 	{
+		GameData data = SaveSystem.LoadProgress();
 		player = FindAnyObjectByType<Player>();
+		player.bonusPlayer = data.bonusPlayer;
 		if (!player.bonusPlayer)
 		{
 			intro.Play();
-			loop.clip = clips[0];
 			loop.PlayDelayed(intro.clip.length);
 		}
 		else
 		{
-			loop.clip = clips[1];
-			loop.volume = 0.15f;
-			loop.Play();
+			nyan.Play();
 		}
 		pauseScreen.SetActive(false);
 		warningScreen.SetActive(false);
+		buttonClickSound.ignoreListenerPause = true;
 	}
 
 	// Update is called once per frame
@@ -59,12 +58,14 @@ public class GameController : MonoBehaviour
 		if (Input.GetButtonDown("Cancel"))
 		{
 			isPaused = !isPaused;
+			MainMonster.isPaused = isPaused;
 			Time.timeScale = isPaused ? 0 : 1;
 			pauseScreen.SetActive(isPaused);
 			
 			if (isPaused)
 			{
-				loop.Pause();
+				AudioListener.pause = true;
+				
 				pauseCoins.text = player.coins.ToString();
 				pauseKeys.text = player.keys.ToString();
 				pauseScore.text = player.score.ToString("F0");
@@ -72,7 +73,7 @@ public class GameController : MonoBehaviour
 			}
 			else
 			{
-				loop.UnPause();
+				AudioListener.pause = false;
 			}
 		}
 		pauseScreen.transform.SetSiblingIndex(15);
@@ -148,14 +149,16 @@ public class GameController : MonoBehaviour
 		{
 			buttonClickSound.Play();
 			isPaused = false;
+			MainMonster.isPaused = isPaused;
 			Time.timeScale = isPaused ? 0 : 1;
 			pauseScreen.SetActive(false);
-			loop.UnPause();
+			AudioListener.pause = false;
 		}
 	}
 
 	public void OpenMainMenu()
 	{
+		buttonClickSound.Play();
 		if (isPaused)
 		{
 			warningScreen.SetActive(true);
@@ -168,6 +171,7 @@ public class GameController : MonoBehaviour
 		isPaused = false;
 		Time.timeScale = isPaused ? 0 : 1;
 		pauseScreen.SetActive(false);
+		AudioListener.pause = false;
 		SceneManager.LoadScene(0);
 	}
 
@@ -176,5 +180,5 @@ public class GameController : MonoBehaviour
 		buttonClickSound.Play();
 		warningScreen.SetActive(false);
 		pauseScreen.SetActive(true);
-	}	
+	}
 }
