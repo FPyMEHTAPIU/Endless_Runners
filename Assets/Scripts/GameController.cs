@@ -32,9 +32,6 @@ public class GameController : MonoBehaviour
 	public AudioSource loop = null;
 	public AudioSource buttonClickSound = null;
 	public AudioSource nyan = null;
-	/*public Sprite[] soundSprites = new Sprite[2];
-	public GameObject soundButton = null;
-	private bool soundOff = false;*/
 
 	// Start is called before the first frame update
 	void Start()
@@ -42,7 +39,14 @@ public class GameController : MonoBehaviour
 		Cursor.visible = false;
 		GameData data = SaveSystem.LoadProgress();
 		player = FindAnyObjectByType<Player>();
-		player.bonusPlayer = data.bonusPlayer;
+		if (data != null)
+		{
+			player.bonusPlayer = data.bonusPlayer;
+		}
+		else
+		{
+			player.bonusPlayer = false;
+		}
 		if (!player.bonusPlayer)
 		{
 			intro.Play();
@@ -189,22 +193,4 @@ public class GameController : MonoBehaviour
 		warningScreen.SetActive(false);
 		pauseScreen.SetActive(true);
 	}
-
-	/*public void TurnSound()
-	{
-		soundOff = !soundOff;
-		if (soundOff)
-		{
-			buttonClickSound.Play();
-			AudioListener.pause = true;
-			buttonClickSound.ignoreListenerPause = false;
-			soundButton.GetComponent<Image>().sprite = soundSprites[1];
-		}
-		else
-		{
-			AudioListener.pause = false;
-			buttonClickSound.ignoreListenerPause = true;
-			soundButton.GetComponent<Image>().sprite = soundSprites[0];
-		}
-	}*/
 }

@@ -54,20 +54,11 @@ public class MainMonster : MonoBehaviour
 			&& monsterPosition < maxPosition)
 		{
 			monsterPosition += 300.0f * Time.deltaTime;
-			if (!soundOn && monsterPosition >= minPosition && !player.bonusPlayer)
+			if (!soundOn && monsterPosition > minPosition && !player.bonusPlayer)
 			{
 				beeSound.Play();
 				soundOn = true;
 			}
-		}
-
-		if (isPaused)
-		{
-			beeSound.Pause();
-		}
-		else
-		{
-			beeSound.UnPause();
 		}
 		// Set moster as upper layer than blocks
 		transform.SetSiblingIndex(9);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Security.Cryptography;
+using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -25,8 +26,6 @@ public class MainMenu : MonoBehaviour
 	public GameObject treasure = null;
 	public GameObject bonusScreen = null;
 	public GameObject warningScreen = null;
-	/*public GameObject soundButton = null;
-	public Sprite[] soundSprites = new Sprite[2];*/
 
 	private GameData data;
 
@@ -35,8 +34,7 @@ public class MainMenu : MonoBehaviour
 	public AudioSource buyTreasureSound = null;
 	public AudioSource openTreasureSound = null;
 	public AudioSource buttonClickSound = null;
-
-	//private bool soundOff = false;
+	public GameObject resetButton = null;
 
 	// Start is called before the first frame update
 	void Start()
@@ -86,6 +84,15 @@ public class MainMenu : MonoBehaviour
 		{
 			shop.SetActive(false);
 			treasure.SetActive(false);
+		}
+
+		if (!File.Exists(Application.persistentDataPath + "/game.data"))
+		{
+			resetButton.GetComponent<Button>().interactable = false;
+		}
+		else
+		{
+			resetButton.GetComponent<Button>().interactable = true;
 		}
 	}
 
@@ -161,12 +168,12 @@ public class MainMenu : MonoBehaviour
 
 	public void OpenWarningScreen()
 	{
+		buttonClickSound.Play();
 		warningScreen.SetActive(true);
 	}
 
 	public void ResetProgress()
 	{
-		buttonClickSound.Play();
 		player.totalCoins = coins = 0;
 		player.totalKeys = keys = 0;
 		player.maxScore = data.highScore = score = 0;
@@ -194,24 +201,6 @@ public class MainMenu : MonoBehaviour
 		buttonClickSound.Play();
 		warningScreen.SetActive(false);
 	}
-
-	/*public void TurnSound()
-	{
-		soundOff = !soundOff;
-		if (soundOff)
-		{
-			buttonClickSound.Play();
-			AudioListener.pause = true;
-			buttonClickSound.ignoreListenerPause = false;
-			soundButton.GetComponent<Image>().sprite = soundSprites[1];
-		}
-		else
-		{
-			AudioListener.pause = false;
-			buttonClickSound.ignoreListenerPause = true;
-			soundButton.GetComponent<Image>().sprite = soundSprites[0];
-		}
-	}*/
 
 	public void Quit()
 	{

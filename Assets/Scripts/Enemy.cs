@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
 	{
 		if (Mathf.Abs(transform.position.y - player.transform.position.y) <= 25 && 
 					transform.position.x - player.transform.position.x > 0 &&
-					transform.position.x - player.transform.position.x < 1500 &&
+					transform.position.x <= 1960 &&
 					!isMelee && canAttack)
 		{
 			Shoot();
